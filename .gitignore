@@ -31,4 +31,6 @@
 # Media and fonts
 *.png
 *.jpg
+*.jpeg
 *.wav
+*.ttf
