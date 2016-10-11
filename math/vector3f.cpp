@@ -15,17 +15,23 @@ class Vector3f
 		this->z = z;
 	}
 
-	/*Vector3f(const Vector3f &v)
+	Vector3f(const Vector3f &v)
 	{
-
+		this->setX(v.getX());
+		this->setY(v.getY());
+		this->setZ(v.getZ());
 	}
 
 	Vector3f& operator= (const Vector3f &v)
 	{
+		this->setX(v.getX());
+		this->setY(v.getY());
+		this->setZ(v.getZ());
 
-	}*/
+		return *this;
+	}
 
-	float getX()
+	float getX() const
 	{
 		return x;
 	}
@@ -35,7 +41,7 @@ class Vector3f
 		this->x = x;
 	}
 
-	float getY()
+	float getY() const
 	{
 		return y;
 	}
@@ -45,7 +51,7 @@ class Vector3f
 		this->y = y;
 	}
 
-	float getZ()
+	float getZ() const
 	{
 		return z;
 	}

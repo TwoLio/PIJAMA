@@ -13,17 +13,21 @@ class Vector2f
 		this->y = y;
 	}
 
-	/*Vector2f(const Vector2f &v)
+	Vector2f(const Vector2f &v)
 	{
-
+		this->setX(v.getX());
+		this->setY(v.getY());
 	}
 
 	Vector2f& operator= (const Vector2f &v)
 	{
+		this->setX(v.getX());
+		this->setY(v.getY());
 
-	}*/
+		return *this;
+	}
 
-	float getX()
+	float getX() const
 	{
 		return x;
 	}
@@ -33,7 +37,7 @@ class Vector2f
 		this->x = x;
 	}
 
-	float getY()
+	float getY() const
 	{
 		return y;
 	}

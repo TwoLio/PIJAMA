@@ -3,11 +3,13 @@
 class Matrix4f
 {
 	private:
-	float m[4][4];
+	float **m;
 
 	public:
 	Matrix4f()
 	{
+		*m = new float[4];
+		
 	}
 
 	~Matrix4f()
@@ -36,22 +38,23 @@ class Matrix4f
 		return this;
 	}
 
-	void initRotation(Vector3f *forward, Vector3f *up)
+	Matrix4f* initRotation(Vector3f *forward, Vector3f *up)
 	{
-/*		Vector3f *f = forward;
+		Vector3f *f = forward;
 		f->normalize();
 
 		Vector3f *r = up;
 		r->normalize();
-		r->cross(f);
+		r = r->cross(f);
 
-		Vector3f *u = f;
-		u->cross(r);
+		Vector3f *u = f->cross(r);
 
 		m[0][0] = r->getX();	m[0][1] = r->getY();	m[0][2] = r->getZ();	m[0][3] = 0;
 		m[1][0] = u->getX();	m[1][1] = u->getY();	m[1][2] = u->getZ();	m[1][3] = 0;
 		m[2][0] = f->getX();	m[2][1] = f->getY();	m[2][2] = f->getZ();	m[2][3] = 0;
-		m[3][0] = 0;			m[3][1] = 0;			m[3][2] = 0;			m[3][3] = 1;*/
+		m[3][0] = 0;			m[3][1] = 0;			m[3][2] = 0;			m[3][3] = 1;
+
+		return this;
 	}
 
 	Matrix4f* initPerspective(float fov, float ratio, float zNear, float zFar)
@@ -112,7 +115,9 @@ class Matrix4f
 		rz->m[2][0] = 0;		rz->m[2][1] = 0;		rz->m[2][2] = 1;		rz->m[2][3] = 0;
 		rz->m[3][0] = 0;		rz->m[3][1] = 0;		rz->m[3][2] = 0;		rz->m[3][3] = 1;
 
-		//TODO
+		//TODO m = rz->mul(ry->mul(rx)).getMatrix();
+
+		
 	}
 
 	Matrix4f* initScale(float x, float y, float z)
@@ -124,4 +129,24 @@ class Matrix4f
 
 		return this;
 	}
+
+	float getValue(int i, int j)
+	{
+		return m[i][j];
+	}
+
+	void setValue(int i, int j, int value)
+	{
+		m[i][j] = value;
+	}
+
+/*	float** getMatrix()
+	{
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++)
+				r[i][j] = m[i][j];
+
+		return r;
+	}
+*/
 };
