@@ -140,6 +140,8 @@ class Matrix4f
 		m[i][j] = value;
 	}
 
+
+
 /*	float** getMatrix()
 	{
 		for (int i = 0; i < 4; i++)
