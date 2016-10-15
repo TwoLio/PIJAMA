@@ -32,7 +32,6 @@ int main(int argc, char **argv)
 	ALLEGRO_EVENT_QUEUE		*eventQueue = nullptr;
 
 	bool 					renderScene = true;
-	bool 					exitGame = false;
 
 	if (!initAllegro())
 		return showMessageBox("Inizializzazione fallita a causa di un errore sconosciuto.", ALLEGRO_MESSAGEBOX_ERROR);
@@ -46,11 +45,14 @@ int main(int argc, char **argv)
 
 	al_hide_mouse_cursor(display);
 
+	SCREEN_W = displayMode.width;
+	SCREEN_H = displayMode.height;
+
 	//initOpenGL(displayMode.width, displayMode.height);
 
-	GameObject *bad = new GameObject(displayMode.width, displayMode.height, 20, true, 250, 0, 200.0f);
-	GameObject *p1 = new GameObject(displayMode.width, displayMode.height, 20, false, -250, -20);
-	GameObject *p2 = new GameObject(displayMode.width, displayMode.height, 20, false, -250, 20);
+	GameCharacter *bad = new GameCharacter(20, true, 250, 0, 200.0f);
+	GameCharacter *p1 = new GameCharacter(20, false, -250, -20);
+	GameCharacter *p2 = new GameCharacter(20, false, -250, 20);
 
 	al_reserve_samples(1);
 	sample = al_load_sample("sfx/relax.wav");
@@ -78,84 +80,21 @@ int main(int argc, char **argv)
 
 		if (event.type == ALLEGRO_EVENT_KEY_DOWN)
 		{
-			switch (event.keyboard.keycode)
-			{
-				case ALLEGRO_KEY_UP:
-					keys[UP] = true;
-					break;
-				case ALLEGRO_KEY_DOWN:
-					keys[DOWN] = true;
-					break;
-				case ALLEGRO_KEY_LEFT:
-					keys[LEFT] = true;
-					break;
-				case ALLEGRO_KEY_RIGHT:
-					keys[RIGHT] = true;
-					break;
-				case ALLEGRO_KEY_W:
-					keys[W] = true;
-					break;
-				case ALLEGRO_KEY_A:
-					keys[A] = true;
-					break;
-				case ALLEGRO_KEY_S:
-					keys[S] = true;
-					break;
-				case ALLEGRO_KEY_D:
-					keys[D] = true;
-					break;
-				case ALLEGRO_KEY_SPACE:
-					keys[SPACE] = true;
-					break;
-				case ALLEGRO_KEY_ENTER:
-					keys[ENTER] = true;
-					break;
-			}
+			p1->input(event.keyboard.keycode, true);
+			//p2->input(event.keyboard.keycode, true);
 		}
 		else if (event.type == ALLEGRO_EVENT_KEY_UP)
 		{
-			switch (event.keyboard.keycode)
-			{
-				case ALLEGRO_KEY_UP:
-					keys[UP] = false;
-					break;
-				case ALLEGRO_KEY_DOWN:
-					keys[DOWN] = false;
-					break;
-				case ALLEGRO_KEY_LEFT:
-					keys[LEFT] = false;
-					break;
-				case ALLEGRO_KEY_RIGHT:
-					keys[RIGHT] = false;
-					break;
-				case ALLEGRO_KEY_W:
-					keys[W] = false;
-					break;
-				case ALLEGRO_KEY_A:
-					keys[A] = false;
-					break;
-				case ALLEGRO_KEY_S:
-					keys[S] = false;
-					break;
-				case ALLEGRO_KEY_D:
-					keys[D] = false;
-					break;
-				case ALLEGRO_KEY_SPACE:
-					keys[SPACE] = false;
-					break;
-				case ALLEGRO_KEY_ENTER:
-					keys[ENTER] = false;
-					break;
-				case ALLEGRO_KEY_ESCAPE:
-					exitGame = true;
-					break;
-			}			
+			p1->input(event.keyboard.keycode, false);
+			//p2->input(event.keyboard.keycode, false);
 		}
 		else if (event.type == ALLEGRO_EVENT_MOUSE_AXES ||
 				 event.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY)
 		{
-			p1->setX(event.mouse.x);
-			p1->setY(event.mouse.y);
+			//p1->setX(event.mouse.x);
+			//p1->setY(event.mouse.y);
+			p2->setX(event.mouse.x);
+			p2->setY(event.mouse.y);
 		}
 		else if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 		{
@@ -174,14 +113,7 @@ int main(int argc, char **argv)
 			//al_get_keyboard_state(&keyState);
 			//al_get_mouse_state(&mouseState);
 
-			if (keys[UP] && p2->getY() >= 5.0)
-				p2->move(UP);
-			if (keys[DOWN] && p2->getY() <= displayMode.height - p2->getSize() - 5.0)
-				p2->move(DOWN);
-			if (keys[LEFT] && p2->getX() >= 5.0)
-				p2->move(LEFT);
-			if (keys[RIGHT] && p2->getX() <= displayMode.width - p2->getSize() - 5.0)
-				p2->move(RIGHT);
+			p1->update();
 
 			if (bad->getDistance(p1) < bad->getDistance(p2))
 				bad->update(p1);
@@ -208,12 +140,12 @@ int main(int argc, char **argv)
 		}
 	}
 
-	al_shutdown_native_dialog_addon();
-	al_show_mouse_cursor(display);
-
 	delete bad;
 	delete p2;
 	delete p1;
+
+	al_shutdown_native_dialog_addon();
+	al_show_mouse_cursor(display);
 
 	al_destroy_event_queue(eventQueue);
 	al_destroy_sample(sample);

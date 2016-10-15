@@ -3,12 +3,11 @@
 class Matrix4f
 {
 	private:
-	float **m;
+	float m[4][4];
 
 	public:
 	Matrix4f()
 	{
-		*m = new float[4];
 		
 	}
 
@@ -139,8 +138,6 @@ class Matrix4f
 	{
 		m[i][j] = value;
 	}
-
-
 
 /*	float** getMatrix()
 	{

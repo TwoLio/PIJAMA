@@ -2,29 +2,47 @@
 #include <allegro5/allegro.h>
 #include <cmath>
 
-bool keys[] = {	false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false	};
+int SCREEN_W = 0,
+	SCREEN_H = 0;
+
+bool exitGame = false;
+
+bool keys[] = {	false, false, false, false, false,
+				false, false, false, false, false,
+				false, false, false, false, false,
+				false, false, false, false, false,
+				false, false, false, false,	false,
+				false, false, false, false, false,
+				false, false, false, false, false,
+				false, false, false, false, false,
+				false, false, false, false,	false,
+				false, false, false, false, false,
+				false, false, false, false,	false,
+				false, false, false, false, false	};
 
 enum game_keys
 {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	W,
-	A,
-	S,
-	D,
-	SPACE,
-	ENTER
+	UP, DOWN,
+	LEFT, RIGHT,
+	SPACE, ENTER,
+	ALT, ALTGR,
+	ESCAPE,	BACKSPACE,
+	LSHIFT, RSHIFT,
+	LCTRL, RCTRL,
+	TAB, DEL,
+	HOME, END,
+	PGUP, PGDN,
+	
+	A, B, C, D, E, F, G, H, I, J, K, L, M,
+	N, O, P, Q, R, S, T, U,	V, W, X, Y, Z, 
+
+	PAD_0, PAD_1,
+	PAD_2, PAD_3,
+	PAD_4, PAD_5,
+	PAD_6, PAD_7,
+	PAD_8, PAD_9,
+	PAD_ENTER, PAD_DEL,
+	PAD_PLUS, PAD_MINUS
 };
 
 enum game_states
@@ -45,7 +63,7 @@ enum obj_states
 	DEFENSE
 };
 
-class GameObject
+class GameCharacter
 {
 	protected:
 	float x;
@@ -65,10 +83,10 @@ class GameObject
 //	ALLEGRO_TIMER	*timer = nullptr;
 //	ALLEGRO_SAMPLE	*sound = nullptr;
 
-	GameObject(float dWidth, float dHeight, int size, bool NPC, float offsetX = 0.0f, float offsetY = 0.0f, float sight = 0.0f)
+	GameCharacter(int size, bool NPC, float offsetX = 0.0f, float offsetY = 0.0f, float sight = 0.0f)
 	{
-		this->x = this->spawnX = (dWidth / 2 - size / 2) + offsetX;
-		this->y = this->spawnY = (dHeight / 2 - size / 2) + offsetY;
+		this->x = this->spawnX = (SCREEN_W / 2 - size / 2) + offsetX;
+		this->y = this->spawnY = (SCREEN_H / 2 - size / 2) + offsetY;
 		this->size = size;
 
 		this->NPC = NPC;
@@ -76,47 +94,248 @@ class GameObject
 		this->state = IDLE;
 	}
 
-	~GameObject()
+	~GameCharacter()
 	{
 		//al_destroy_bitmap(texture);
 		//al_destroy_timer(timer);
 		//al_destroy_sample(sound);
 	}
 
-	void update(GameObject *target)
+	void input(int keycode, bool keyFlag)
 	{
-		if (this->state == IDLE)
-		{
-			if (this->sight > this->getDistance(target))
-				this->setState(CHASE);
-		}
-		else if (this->state == CHASE)
-		{
-			if (this->sight < this->getDistance(this->spawnX, this->spawnY))
-				this->state = RETREAT;
-			else
+			switch (keycode)
 			{
-				this->follow(target);
+				case ALLEGRO_KEY_UP:
+					keys[UP] = keyFlag;
+					break;
+				case ALLEGRO_KEY_DOWN:
+					keys[DOWN] = keyFlag;
+					break;
+				case ALLEGRO_KEY_LEFT:
+					keys[LEFT] = keyFlag;
+					break;
+				case ALLEGRO_KEY_RIGHT:
+					keys[RIGHT] = keyFlag;
+					break;
+				case ALLEGRO_KEY_SPACE:
+					keys[SPACE] = keyFlag;
+					break;
+				case ALLEGRO_KEY_ENTER:
+					keys[ENTER] = keyFlag;
+					break;
+				case ALLEGRO_KEY_ALT:
+					keys[ALT] = keyFlag;
+					break;
+				case ALLEGRO_KEY_ALTGR:
+					keys[ALTGR] = keyFlag;
+					break;
+				case ALLEGRO_KEY_ESCAPE:
+					exitGame = keyFlag;
+					break;
+				case ALLEGRO_KEY_BACKSPACE:
+					keys[BACKSPACE] = keyFlag;
+					break;
+				case ALLEGRO_KEY_LSHIFT:
+					keys[LSHIFT] = keyFlag;
+					break;
+				case ALLEGRO_KEY_RSHIFT:
+					keys[RSHIFT] = keyFlag;
+					break;
+				case ALLEGRO_KEY_LCTRL:
+					keys[LCTRL] = keyFlag;
+					break;
+				case ALLEGRO_KEY_RCTRL:
+					keys[RCTRL] = keyFlag;
+					break;
+				case ALLEGRO_KEY_TAB:
+					keys[TAB] = keyFlag;
+					break;
+				case ALLEGRO_KEY_DELETE:
+					keys[DEL] = keyFlag;
+					break;
+				case ALLEGRO_KEY_HOME:
+					keys[HOME] = keyFlag;
+					break;
+				case ALLEGRO_KEY_END:
+					keys[END] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PGUP:
+					keys[PGUP] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PGDN:
+					keys[PGDN] = keyFlag;
+					break;
+				case ALLEGRO_KEY_A:
+					keys[A] = keyFlag;
+					break;
+				case ALLEGRO_KEY_B:
+					keys[B] = keyFlag;
+					break;
+				case ALLEGRO_KEY_C:
+					keys[C] = keyFlag;
+					break;
+				case ALLEGRO_KEY_D:
+					keys[D] = keyFlag;
+					break;
+				case ALLEGRO_KEY_E:
+					keys[E] = keyFlag;
+					break;
+				case ALLEGRO_KEY_F:
+					keys[F] = keyFlag;
+					break;
+				case ALLEGRO_KEY_G:
+					keys[G] = keyFlag;
+					break;
+				case ALLEGRO_KEY_H:
+					keys[H] = keyFlag;
+					break;
+				case ALLEGRO_KEY_I:
+					keys[I] = keyFlag;
+					break;
+				case ALLEGRO_KEY_J:
+					keys[J] = keyFlag;
+					break;
+				case ALLEGRO_KEY_K:
+					keys[K] = keyFlag;
+					break;
+				case ALLEGRO_KEY_L:
+					keys[L] = keyFlag;
+					break;
+				case ALLEGRO_KEY_M:
+					keys[M] = keyFlag;
+					break;
+				case ALLEGRO_KEY_N:
+					keys[N] = keyFlag;
+					break;
+				case ALLEGRO_KEY_O:
+					keys[O] = keyFlag;
+					break;
+				case ALLEGRO_KEY_P:
+					keys[P] = keyFlag;
+					break;
+				case ALLEGRO_KEY_Q:
+					keys[Q] = keyFlag;
+					break;
+				case ALLEGRO_KEY_R:
+					keys[R] = keyFlag;
+					break;
+				case ALLEGRO_KEY_S:
+					keys[S] = keyFlag;
+					break;
+				case ALLEGRO_KEY_T:
+					keys[T] = keyFlag;
+					break;
+				case ALLEGRO_KEY_U:
+					keys[U] = keyFlag;
+					break;
+				case ALLEGRO_KEY_V:
+					keys[V] = keyFlag;
+					break;
+				case ALLEGRO_KEY_W:
+					keys[W] = keyFlag;
+					break;
+				case ALLEGRO_KEY_X:
+					keys[X] = keyFlag;
+					break;
+				case ALLEGRO_KEY_Y:
+					keys[Y] = keyFlag;
+					break;
+				case ALLEGRO_KEY_Z:
+					keys[Z] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_0:
+					keys[PAD_0] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_1:
+					keys[PAD_1] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_2:
+					keys[PAD_2] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_3:
+					keys[PAD_3] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_4:
+					keys[PAD_4] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_5:
+					keys[PAD_5] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_6:
+					keys[PAD_6] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_7:
+					keys[PAD_7] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_8:
+					keys[PAD_8] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_9:
+					keys[PAD_9] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_ENTER:
+					keys[PAD_ENTER] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_DELETE:
+					keys[PAD_DEL] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_PLUS:
+					keys[PAD_PLUS] = keyFlag;
+					break;
+				case ALLEGRO_KEY_PAD_MINUS:
+					keys[PAD_MINUS] = keyFlag;
+					break;
+			}			
+	}
 
-				if (this->sight < this->getDistance(target))
-					this->state = RETREAT;
-			}
-		}
-		else if (this->state == RETREAT)
+	void update(GameCharacter *target = nullptr)
+	{
+		if (this->NPC)
 		{
-			if (5 >= this->getDistance(this->spawnX, this->spawnY))
+			if (this->state == IDLE)
 			{
-				this->x = this->spawnX;
-				this->y = this->spawnY;
-				this->state = IDLE;
-			}
-			else
-			{
-				this->follow(this->spawnX, this->spawnY);
-
 				if (this->sight > this->getDistance(target))
-					this->state = CHASE;
+					this->setState(CHASE);
 			}
+			else if (this->state == CHASE)
+			{
+				if (this->sight < this->getDistance(this->spawnX, this->spawnY))
+					this->state = RETREAT;
+				else
+				{
+					this->follow(target);
+
+					if (this->sight < this->getDistance(target))
+						this->state = RETREAT;
+				}
+			}
+			else if (this->state == RETREAT)
+			{
+				if (5 >= this->getDistance(this->spawnX, this->spawnY))
+				{
+					this->x = this->spawnX;
+					this->y = this->spawnY;
+					this->state = IDLE;
+				}
+				else
+				{
+					this->follow(this->spawnX, this->spawnY);
+
+					if (this->sight > this->getDistance(target))
+						this->state = CHASE;
+				}
+			}
+		}
+		else
+		{
+			if (keys[UP] && this->y >= 5.0)
+				this->move(UP);
+			if (keys[DOWN] && this->y <= SCREEN_H - this->size - 5.0)
+				this->move(DOWN);
+			if (keys[LEFT] && this->x >= 5.0)
+				this->move(LEFT);
+			if (keys[RIGHT] && this->x <= SCREEN_W - this->size - 5.0)
+				this->move(RIGHT);
 		}
 	}
 
@@ -159,7 +378,7 @@ class GameObject
 		};
 	}
 
-	void follow(GameObject *obj)
+	void follow(GameCharacter *obj)
 	{
 		float angle = this->getAngle(obj);
 		this->x += (2 * cos(angle));
@@ -191,6 +410,12 @@ class GameObject
 		this->y = y;
 	}
 
+	void setPos(float x, float y)
+	{
+		this->x = x;
+		this->y = y;
+	}
+
 	float getSpawnX()
 	{
 		return spawnX;
@@ -206,6 +431,12 @@ class GameObject
 	}
 	void setSpawnY(float spawnY)
 	{
+		this->spawnY = spawnY;
+	}
+
+	void setSpawn(float spawnX, float spawnY)
+	{
+		this->spawnX = spawnX;
 		this->spawnY = spawnY;
 	}
 
@@ -243,7 +474,7 @@ class GameObject
 		return sqrt(pow(x - this->x, 2) + pow(y - this->y, 2));
 	}
 
-	float getDistance(GameObject *obj)
+	float getDistance(GameCharacter *obj)
 	{
 		return sqrt(pow(obj->x - this->x, 2) + pow(obj->y - this->y, 2));
 	}
@@ -255,7 +486,7 @@ class GameObject
 		return atan2(dy, dx);
 	}
 
-	float getAngle(GameObject *obj)
+	float getAngle(GameCharacter *obj)
 	{
 		float dx = obj->x - this->x;
 		float dy = obj->y - this->y;
