@@ -7,7 +7,9 @@
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_opengl.h>
-#include "global.cpp"
+#include <glm/glm.hpp>
+#include "global.h"
+#include "character.cpp"
 #include "function.cpp"
 
 int main(int argc, char **argv)
@@ -35,19 +37,19 @@ int main(int argc, char **argv)
 	if (!initAllegro())
 		return showMessageBox("Inizializzazione fallita a causa di un errore sconosciuto.", ALLEGRO_MESSAGEBOX_ERROR);
 
-	al_set_new_display_flags(ALLEGRO_FULLSCREEN | ALLEGRO_OPENGL);
+	al_set_new_display_flags(ALLEGRO_FULLSCREEN);
+	//al_set_new_display_flags(ALLEGRO_OPENGL);
 
 	al_get_display_mode(1, &displayMode);										//Risoluzione minima 'al_get_num_display_modes() - 1' /Risoluzione massima '0'
 	display = al_create_display(displayMode.width, displayMode.height);
 	if (!display)
 		return showMessageBox("Errore creazione display", ALLEGRO_MESSAGEBOX_ERROR);
 
-	al_hide_mouse_cursor(display);
-
 	SCREEN_W = displayMode.width;
 	SCREEN_H = displayMode.height;
 
-	initOpenGL(displayMode.width, displayMode.height);
+	al_hide_mouse_cursor(display);
+	//initOpenGL(SCREEN_W, SCREEN_H);
 
 	GameCharacter 			*bad = new GameCharacter(20, true, 250, 0, 200.0f);
 	GameCharacter 			*p1 = new GameCharacter(20, false, -250, -20);
@@ -56,7 +58,7 @@ int main(int argc, char **argv)
 	al_reserve_samples(1);
 	sample = al_load_sample("sfx/relax.wav");
 	font = al_load_ttf_font("gfx/font/amsterdam.ttf", 36, 0);
-	timerFPS = al_create_timer(1.0 / FPS);
+	timerFPS = al_create_timer(1.0f / FPS);
 	eventQueue = al_create_event_queue();
 
 	al_register_event_source(eventQueue, al_get_timer_event_source(timerFPS));
@@ -64,7 +66,7 @@ int main(int argc, char **argv)
 	al_register_event_source(eventQueue, al_get_mouse_event_source());
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
-	al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, NULL);
+	al_play_sample(sample, 1.0f, 0.0f, 1.0f, ALLEGRO_PLAYMODE_LOOP, NULL);
 
 	al_start_timer(timerFPS);
 	gameTime = al_current_time();
@@ -129,10 +131,11 @@ int main(int argc, char **argv)
 			al_draw_textf(font, al_map_rgb(255, 255, 255), 10, 70,
 							ALLEGRO_ALIGN_LEFT, "FPS: %i", gameFPS);
 
-			p1->render(0, 0, 255, true);
+			p1->render(0, 0, 255);
 			p2->render(0, 255, 0);
 			bad->render();
 
+			al_flip_display();
 			al_clear_to_color(al_map_rgb(0, 0, 0));
 		}
 	}

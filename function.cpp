@@ -19,7 +19,7 @@ bool initAllegro()
 	return true;
 }
 
-void initOpenGL(int width, int height)
+void initOpenGL(int &width, int &height)
 {
 	glEnable(GL_DEPTH_TEST);
 	glViewport(0, 0, width, height);
@@ -91,3 +91,8 @@ int showMessageBox(const char *text, int flag, const char *button = NULL)
 
 	return -1;																	// -1: Errore // 0: Chiusura // 1: Ok/Yes // 2: Cancel/No
 }
+
+/*	bad.bmp = al_create_bitmap(bad.size, bad.size);
+	al_set_target_bitmap(bad.bmp);
+	al_clear_to_color(al_map_rgb(255, 0, 255));
+	al_set_target_bitmap(al_get_backbuffer(display));	*/
