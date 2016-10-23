@@ -9,7 +9,6 @@
 #include <allegro5/allegro_opengl.h>
 #include "global.cpp"
 #include "function.cpp"
-#include "math/math.cpp"
 
 int main(int argc, char **argv)
 {
@@ -48,11 +47,11 @@ int main(int argc, char **argv)
 	SCREEN_W = displayMode.width;
 	SCREEN_H = displayMode.height;
 
-	//initOpenGL(displayMode.width, displayMode.height);
+	initOpenGL(displayMode.width, displayMode.height);
 
-	GameCharacter *bad = new GameCharacter(20, true, 250, 0, 200.0f);
-	GameCharacter *p1 = new GameCharacter(20, false, -250, -20);
-	GameCharacter *p2 = new GameCharacter(20, false, -250, 20);
+	GameCharacter 			*bad = new GameCharacter(20, true, 250, 0, 200.0f);
+	GameCharacter 			*p1 = new GameCharacter(20, false, -250, -20);
+	GameCharacter 			*p2 = new GameCharacter(20, false, -250, 20);
 
 	al_reserve_samples(1);
 	sample = al_load_sample("sfx/relax.wav");
@@ -130,12 +129,10 @@ int main(int argc, char **argv)
 			al_draw_textf(font, al_map_rgb(255, 255, 255), 10, 70,
 							ALLEGRO_ALIGN_LEFT, "FPS: %i", gameFPS);
 
-			p1->render(0, 0, 255);
+			p1->render(0, 0, 255, true);
 			p2->render(0, 255, 0);
 			bad->render();
-			//renderOpenGL();
 
-			al_flip_display();
 			al_clear_to_color(al_map_rgb(0, 0, 0));
 		}
 	}

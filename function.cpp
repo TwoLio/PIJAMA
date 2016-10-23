@@ -29,28 +29,6 @@ void initOpenGL(int width, int height)
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-void renderOpenGL()
-{
-	glPushMatrix();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glBegin(GL_TRIANGLES);
-	glColor3f(1.0f, 1.0f, 1.0f);
-
-	glVertex3f(100.0f, 100.0f, 0.0f);
-	glVertex3f(200.0f, 200.0f, 0.0f);
-	glVertex3f(200.0f, 100.0f, 0.0f);
-
-	glEnd();
-	glFlush();
-	glPopMatrix();
-
-	al_wait_for_vsync();
-	al_flip_display();
-}
-
 void changeState(int &state, int newState)
 {
 	state = newState;
