@@ -1,4 +1,3 @@
-#pragma once
 #include <allegro5/allegro_native_dialog.h>
 
 bool initAllegro()
@@ -17,16 +16,6 @@ bool initAllegro()
 	al_init_native_dialog_addon();
 
 	return true;
-}
-
-void initOpenGL(int &width, int &height)
-{
-	glEnable(GL_DEPTH_TEST);
-	glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, width, height, 0, -200, 200);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 void changeState(int &state, int newState)
