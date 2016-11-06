@@ -1,7 +1,7 @@
 #pragma once
 
-int		SCREEN_W = 0,
-		SCREEN_H = 0;
+int		SCREEN_WIDTH = 0,
+		SCREEN_HEIGHT = 0;
 
 bool 	exitGame = false,
 		keys[] = {	false, false, false, false, false,

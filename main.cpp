@@ -9,8 +9,9 @@
 #include <allegro5/allegro_opengl.h>
 #include <glm/glm.hpp>
 #include "global.h"
-#include "character.cpp"
+#include "object.cpp"
 #include "function.cpp"
+#include "display.cpp"
 
 int main(int argc, char **argv)
 {
@@ -20,9 +21,6 @@ int main(int argc, char **argv)
 	int						gameFPS = 0;
 
 	ALLEGRO_TIMER			*timerFPS = nullptr;
-
-	ALLEGRO_DISPLAY 		*display = nullptr;
-	ALLEGRO_DISPLAY_MODE	displayMode;
 
 	ALLEGRO_FONT			*font = nullptr;
 	ALLEGRO_SAMPLE			*sample = nullptr;
@@ -37,23 +35,20 @@ int main(int argc, char **argv)
 	if (!initAllegro())
 		return showMessageBox("Inizializzazione fallita a causa di un errore sconosciuto.", ALLEGRO_MESSAGEBOX_ERROR);
 
-	al_set_new_display_flags(ALLEGRO_FULLSCREEN);
-	//al_set_new_display_flags(ALLEGRO_OPENGL);
 
-	al_get_display_mode(1, &displayMode);										//Risoluzione minima 'al_get_num_display_modes() - 1' /Risoluzione massima '0'
-	display = al_create_display(displayMode.width, displayMode.height);
-	if (!display)
+	GameDisplay				*gameDisplay = new GameDisplay();
+
+	if (!gameDisplay->display)
 		return showMessageBox("Errore creazione display", ALLEGRO_MESSAGEBOX_ERROR);
 
-	SCREEN_W = displayMode.width;
-	SCREEN_H = displayMode.height;
+	SCREEN_WIDTH = gameDisplay->getScreenWidth();
+	SCREEN_HEIGHT = gameDisplay->getScreenHeight();
 
-	al_hide_mouse_cursor(display);
-	//initOpenGL(SCREEN_W, SCREEN_H);
+	//initOpenGL(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	GameCharacter 			*bad = new GameCharacter(20, true, 250, 0, 200.0f);
-	GameCharacter 			*p1 = new GameCharacter(20, false, -250, -20);
-	GameCharacter 			*p2 = new GameCharacter(20, false, -250, 20);
+	GameObject 			*bad = new GameObject(20, true, 250, 0, 200.0f);
+	GameObject 			*p1 = new GameObject(20, false, -250, -20);
+	GameObject 			*p2 = new GameObject(20, false, -250, 20);
 
 	al_reserve_samples(1);
 	sample = al_load_sample("sfx/relax.wav");
@@ -62,7 +57,7 @@ int main(int argc, char **argv)
 	eventQueue = al_create_event_queue();
 
 	al_register_event_source(eventQueue, al_get_timer_event_source(timerFPS));
-	al_register_event_source(eventQueue, al_get_display_event_source(display));
+	al_register_event_source(eventQueue, al_get_display_event_source(gameDisplay->display));
 	al_register_event_source(eventQueue, al_get_mouse_event_source());
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
@@ -135,7 +130,7 @@ int main(int argc, char **argv)
 			p2->render(0, 255, 0);
 			bad->render();
 
-			al_flip_display();
+			gameDisplay->draw();
 			al_clear_to_color(al_map_rgb(0, 0, 0));
 		}
 	}
@@ -144,13 +139,13 @@ int main(int argc, char **argv)
 	delete p2;
 	delete p1;
 
+	delete gameDisplay;
+
 	al_shutdown_native_dialog_addon();
-	al_show_mouse_cursor(display);
 
 	al_destroy_event_queue(eventQueue);
 	al_destroy_sample(sample);
 	al_destroy_timer(timerFPS);
-	al_destroy_display(display);
 
 	return 0;
 }
