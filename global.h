@@ -1,4 +1,15 @@
 #pragma once
+#include <cstdlib>
+#include <iostream>
+#include <glm/glm.hpp>
+
+#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_primitives.h>
+//#include <allegro5/allegro_opengl.h>
 
 int		SCREEN_WIDTH = 0,
 		SCREEN_HEIGHT = 0;

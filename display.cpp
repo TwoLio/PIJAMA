@@ -13,7 +13,6 @@ class GameDisplay
 		al_inhibit_screensaver(true);
 
 		al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
-		//al_set_new_display_flags(ALLEGRO_OPENGL_3_0);
 
 		numDisplayModes = al_get_num_display_modes();
 		al_get_display_mode(0, &displayMode);									//Risoluzione minima 'al_get_num_display_modes() - 1' /Risoluzione massima '0'
@@ -35,6 +34,7 @@ class GameDisplay
 	void draw()
 	{
 		al_flip_display();
+		al_clear_to_color(al_map_rgb(0, 0, 0));
 	}
 
 	int getScreenWidth()

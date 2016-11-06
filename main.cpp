@@ -1,13 +1,3 @@
-#include <cstdlib>
-#include <iostream>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_image.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_acodec.h>
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_opengl.h>
-#include <glm/glm.hpp>
 #include "global.h"
 #include "object.cpp"
 #include "function.cpp"
@@ -44,11 +34,9 @@ int main(int argc, char **argv)
 	SCREEN_WIDTH = gameDisplay->getScreenWidth();
 	SCREEN_HEIGHT = gameDisplay->getScreenHeight();
 
-	//initOpenGL(SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	GameObject 			*bad = new GameObject(20, true, 250, 0, 200.0f);
-	GameObject 			*p1 = new GameObject(20, false, -250, -20);
-	GameObject 			*p2 = new GameObject(20, false, -250, 20);
+	GameObject 				*bad = new GameObject(20, true, 250, 0, 200.0f);
+	GameObject 				*p1 = new GameObject(20, false, -250, -20);
+	GameObject 				*p2 = new GameObject(20, false, -250, 20);
 
 	al_reserve_samples(1);
 	sample = al_load_sample("sfx/relax.wav");
@@ -77,18 +65,14 @@ int main(int argc, char **argv)
 		if (event.type == ALLEGRO_EVENT_KEY_DOWN)
 		{
 			p1->input(event.keyboard.keycode, true);
-			//p2->input(event.keyboard.keycode, true);
 		}
 		else if (event.type == ALLEGRO_EVENT_KEY_UP)
 		{
 			p1->input(event.keyboard.keycode, false);
-			//p2->input(event.keyboard.keycode, false);
 		}
 		else if (event.type == ALLEGRO_EVENT_MOUSE_AXES ||
 				 event.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY)
 		{
-			//p1->setX(event.mouse.x);
-			//p1->setY(event.mouse.y);
 			p2->setX(event.mouse.x);
 			p2->setY(event.mouse.y);
 		}
@@ -131,7 +115,6 @@ int main(int argc, char **argv)
 			bad->render();
 
 			gameDisplay->draw();
-			al_clear_to_color(al_map_rgb(0, 0, 0));
 		}
 	}
 
