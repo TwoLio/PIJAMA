@@ -281,46 +281,23 @@ class GameObject
 		}
 	}
 
-	void render(int r = 255, int g = 0, int b = 0, bool renderOpenGL = false)
+	void render(int r = 255, int g = 0, int b = 0)
 	{
-		if (renderOpenGL)
+		if (this->NPC)
 		{
-			glPushMatrix();
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-
-			glBegin(GL_TRIANGLES);
-			glColor3f(1.0f, 1.0f, 1.0f);
-
-			glVertex3f(this->x, this->y, 0.0f);
-			glVertex3f(this->x + 100.0f, this->y + 100.0f, 0.0f);
-			glVertex3f(this->x + 100.0f, this->y, 0.0f);
-
-			glEnd();
-			glFlush();
-			glPopMatrix();
-
-			al_wait_for_vsync();
+			al_draw_circle(this->spawnX, this->spawnY, this->sight,
+							al_map_rgba(255, 255, 255, 128), 1);
+			al_draw_circle(this->x, this->y, this->sight,
+							al_map_rgba(r, g, b, 128), 1);
+			al_draw_filled_rectangle(this->x - 10, this->y - 10,
+									this->x + 10, this->y + 10,
+									al_map_rgb(r, g, b));
 		}
 		else
 		{
-			if (this->NPC)
-			{
-				al_draw_circle(this->spawnX, this->spawnY, this->sight,
-								al_map_rgba(255, 255, 255, 128), 1);
-				al_draw_circle(this->x, this->y, this->sight,
-								al_map_rgba(r, g, b, 128), 1);
-				al_draw_filled_rectangle(this->x - 10, this->y - 10,
-										this->x + 10, this->y + 10,
-										al_map_rgb(r, g, b));
-			}
-			else
-			{
-				al_draw_filled_rectangle(this->x - 10, this->y - 10,
-										this->x + 10, this->y + 10,
-										al_map_rgb(r, g, b));
-			}
+			al_draw_filled_rectangle(this->x - 10, this->y - 10,
+									this->x + 10, this->y + 10,
+									al_map_rgb(r, g, b));
 		}
 	}
 

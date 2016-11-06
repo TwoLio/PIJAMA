@@ -51,8 +51,8 @@ int main(int argc, char **argv)
 
 	al_play_sample(sample, 1.0f, 0.0f, 1.0f, ALLEGRO_PLAYMODE_LOOP, NULL);
 
-	al_start_timer(timerFPS);
 	gameTime = al_current_time();
+	al_start_timer(timerFPS);
 
 	while(!exitGame)
 	{
