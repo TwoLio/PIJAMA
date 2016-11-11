@@ -1,6 +1,13 @@
-#pragma once
-#include <allegro5/allegro.h>
 #include <cmath>
+
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_native_dialog.h>
 
 class GameObject
 {
@@ -11,26 +18,35 @@ class GameObject
 	float spawnX;
 	float spawnY;
 
+	float speed;
 	float sight;
-	int size;
+	float radius;
+
+	int sizeW;
+	int sizeH;
 
 	int state;
 	bool NPC;
 
 	public:
-	ALLEGRO_BITMAP	*texture = nullptr;
-//	ALLEGRO_TIMER	*timer = nullptr;
-//	ALLEGRO_SAMPLE	*sound = nullptr;
+	ALLEGRO_BITMAP	**texture = NULL;
+//	ALLEGRO_SAMPLE	**sound = NULL;
+//	ALLEGRO_TIMER	*timer = NULL;
 
 	GameObject(int size, bool NPC, float offsetX = 0.0f, float offsetY = 0.0f, float sight = 0.0f)
 	{
 		this->x = this->spawnX = (SCREEN_WIDTH / 2 - size / 2) + offsetX;
 		this->y = this->spawnY = (SCREEN_HEIGHT / 2 - size / 2) + offsetY;
-		this->size = size;
+		this->sizeH = size;
+		this->sizeW = size;
 
 		this->NPC = NPC;
-		this->sight = sight;
 		this->state = IDLE;
+
+		this->sight = sight;
+
+		this->speed = 5.0;
+		this->radius = size / 2;
 	}
 
 	~GameObject()	
@@ -227,7 +243,7 @@ class GameObject
 		}			
 	}
 
-	void update(GameObject *target = nullptr)
+	void update(GameObject *target = NULL)
 	{
 		if (this->NPC)
 		{
@@ -269,11 +285,11 @@ class GameObject
 		{
 			if (keys[UP] && this->y >= 5.0)
 				this->move(UP);
-			if (keys[DOWN] && this->y <= SCREEN_HEIGHT - this->size - 5.0)
+			if (keys[DOWN] && this->y <= SCREEN_HEIGHT - this->sizeH - 5.0)
 				this->move(DOWN);
 			if (keys[LEFT] && this->x >= 5.0)
 				this->move(LEFT);
-			if (keys[RIGHT] && this->x <= SCREEN_WIDTH - this->size - 5.0)
+			if (keys[RIGHT] && this->x <= SCREEN_WIDTH - this->sizeW - 5.0)
 				this->move(RIGHT);
 			if (keys[ESCAPE])
 				exitGame = true;
@@ -306,16 +322,16 @@ class GameObject
 		switch (dir)
 		{
 		case UP:
-			this->y -= 5.0;
+			this->y -= this->speed;
 			break;
 		case DOWN:
-			this->y += 5.0;
+			this->y += this->speed;
 			break;
 		case LEFT:
-			this->x -= 5.0;
+			this->x -= this->speed;
 			break;
 		case RIGHT:
-			this->x += 5.0;
+			this->x += this->speed;
 			break;
 		};
 	}
@@ -391,14 +407,34 @@ class GameObject
 		this->sight = sight;
 	}
 
-	int getSize()
+	int getWidthSize()
 	{
-		return size;
+		return sizeW;
 	}
 
-	void setSize(int size)
+	void setWidthSize(int sizeW)
 	{
-		this->size = size;
+		this->sizeW = sizeW;
+	}
+
+	int getHeightSize()
+	{
+		return sizeW;
+	}
+
+	void setHeightSize(int sizeH)
+	{
+		this->sizeH = sizeH;
+	}
+
+	float getRadius()
+	{
+		return radius;
+	}
+
+	void setRadius(float radius)
+	{
+		this->radius = radius;
 	}
 
 	int getState()
@@ -433,5 +469,55 @@ class GameObject
 		float dx = obj->x - this->x;
 		float dy = obj->y - this->y;
 		return atan2(dy, dx);
+	}
+
+	bool getCollisionDB(GameObject *obj)	//Distance Based Collision
+	{
+		if (sqrt(pow(this->x - obj->x, 2) + pow(this->y - obj->y, 2)) < this->radius + obj->radius)
+			return true;
+
+		return false;
+	}
+
+	bool getCollisionBB(GameObject *obj)	//Bounding Box Collision
+	{
+		if ((this->x > obj->x + obj->sizeW)	||
+			(this->y > obj->y + obj->sizeH)	||
+			(obj->x > this->x + this->sizeW)||
+			(obj->y > this->y + this->sizeH))
+			return false;
+
+		return true;
+	}
+
+	bool getCollisionPP(ALLEGRO_BITMAP *texture, ALLEGRO_BITMAP *objTexture, GameObject *obj)	//Pixel Perfect Collision
+	{
+		int ppBoxTop, ppBoxBottom,
+			ppBoxLeft, ppBoxRight;
+
+		if (!getCollisionBB(obj))
+			return false;
+		else
+		{
+			ppBoxTop = std::max(this->y, obj->y);
+			ppBoxBottom = std::min(this->y + this->sizeH, obj->y + obj->sizeH);
+			ppBoxLeft = std::max(this->x, obj->x);
+			ppBoxRight = std::min(this->x + this->sizeW, obj->x + obj->sizeW);
+		}
+
+		for (int i = ppBoxTop; i < ppBoxBottom; i++)
+		{
+			for (int j = ppBoxLeft; j < ppBoxRight; j++)
+			{
+				al_lock_bitmap(texture, al_get_bitmap_format(texture), ALLEGRO_LOCK_READONLY);
+				al_lock_bitmap(objTexture, al_get_bitmap_format(objTexture), ALLEGRO_LOCK_READONLY);
+				ALLEGRO_COLOR color1 = al_get_pixel(texture, j - this->x, i - this->y);
+				ALLEGRO_COLOR color2 = al_get_pixel(objTexture, j - obj->x, i - obj->y);
+
+				if (color1.a != 0 && color2.a != 0)
+					return true;
+			}
+		}
+		return false;
 	}
 };

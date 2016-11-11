@@ -1,12 +1,21 @@
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_native_dialog.h>
+
 class GameDisplay
 {
 	protected:
-	ALLEGRO_BITMAP			*icon = nullptr;
+	//ALLEGRO_BITMAP			*icon = NULL;
 	ALLEGRO_DISPLAY_MODE	displayMode;
 	int						numDisplayModes;
 
 	public:
-	ALLEGRO_DISPLAY 		*display = nullptr;
+	ALLEGRO_DISPLAY 		*display = NULL;
 
 	GameDisplay()
 	{
