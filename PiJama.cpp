@@ -121,7 +121,7 @@ int main(int argc, char **argv)
 			renderScene = false;
 
 			al_draw_textf(font, al_map_rgb(255, 255, 255), 10, 70,
-							ALLEGRO_ALIGN_LEFT, "FPS: %i", gameFPS);
+							ALLEGRO_ALIGN_LEFT, "%i", gameFPS);
 
 			p1->render(0, 0, 255);
 			p2->render(0, 255, 0);

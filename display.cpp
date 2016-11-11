@@ -10,7 +10,7 @@
 class GameDisplay
 {
 	protected:
-	//ALLEGRO_BITMAP			*icon = NULL;
+	//ALLEGRO_BITMAP		*icon = NULL;
 	ALLEGRO_DISPLAY_MODE	displayMode;
 	int						numDisplayModes;
 
