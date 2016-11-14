@@ -7,7 +7,13 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_opengl.h>
 #include <allegro5/allegro_native_dialog.h>
+
+#include <glm/vec3.hpp> // glm::vec3
+#include <glm/vec4.hpp> // glm::vec4
+#include <glm/mat4x4.hpp> // glm::mat4
+#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 
 class GameObject
 {
@@ -25,7 +31,8 @@ class GameObject
 	int sizeW;
 	int sizeH;
 
-	int state;
+	obj_state state;
+	obj_type type;
 	bool NPC;
 
 	public:
@@ -33,19 +40,24 @@ class GameObject
 //	ALLEGRO_SAMPLE	**sound = NULL;
 //	ALLEGRO_TIMER	*timer = NULL;
 
-	GameObject(int size, bool NPC, float offsetX = 0.0f, float offsetY = 0.0f, float sight = 0.0f)
+	GameObject(int size, obj_type type, bool NPC, float offsetX = 0.0f, float offsetY = 0.0f, float sight = 0.0f)
 	{
 		this->x = this->spawnX = (SCREEN_WIDTH / 2 - size / 2) + offsetX;
 		this->y = this->spawnY = (SCREEN_HEIGHT / 2 - size / 2) + offsetY;
 		this->sizeH = size;
 		this->sizeW = size;
 
+		if (type == ENEMY || type == FRIEND)
+			this->state = IDLE;
+		else if (type == PLAYER)
+			this->state = WALK;
+
 		this->NPC = NPC;
-		this->state = IDLE;
+		this->type = type;
 
 		this->sight = sight;
 
-		this->speed = 5.0;
+		this->speed = 2.5;
 		this->radius = size / 2;
 	}
 
@@ -243,14 +255,15 @@ class GameObject
 		}			
 	}
 
-	void update(GameObject *target = NULL)
+	void update(GameObject *target = NULL, GameObject *obj = NULL)
 	{
-		if (this->NPC)
+
+		if (this->NPC && this->type == ENEMY)
 		{
 			if (this->state == IDLE)
 			{
 				if (this->sight > this->getDistance(target))
-					this->setState(CHASE);
+					this->state = CHASE;
 			}
 			else if (this->state == CHASE)
 			{
@@ -281,6 +294,42 @@ class GameObject
 				}
 			}
 		}
+		else if (this->NPC && this->type == FRIEND)
+		{
+			if (this->state == IDLE)
+			{
+				if (this->sight > this->getDistance(obj))
+					this->state = DEFEND;
+				if (this->sight > this->getDistance(target))
+					this->state = ATTACK;
+			}
+			else if (this->state == ATTACK)
+			{
+				if (this->sight < this->getDistance(obj->x, obj->y))
+					this->state = DEFEND;
+				else
+				{
+					this->follow(target);
+
+					if (this->sight < this->getDistance(target))
+						this->state = DEFEND;
+				}
+			}
+			else if (this->state == DEFEND)
+			{
+				if (30 >= this->getDistance(obj->x, obj->y))
+				{
+					this->state = IDLE;
+				}
+				else
+				{
+					this->follow(obj->x, obj->y);
+
+					if (this->sight > this->getDistance(target))
+						this->state = ATTACK;
+				}
+			}
+		}
 		else
 		{
 			if (keys[UP] && this->y >= 5.0)
@@ -291,9 +340,6 @@ class GameObject
 				this->move(LEFT);
 			if (keys[RIGHT] && this->x <= SCREEN_WIDTH - this->sizeW - 5.0)
 				this->move(RIGHT);
-			if (keys[ESCAPE])
-				exitGame = true;
-
 		}
 	}
 
@@ -321,18 +367,18 @@ class GameObject
 	{
 		switch (dir)
 		{
-		case UP:
-			this->y -= this->speed;
-			break;
-		case DOWN:
-			this->y += this->speed;
-			break;
-		case LEFT:
-			this->x -= this->speed;
-			break;
-		case RIGHT:
-			this->x += this->speed;
-			break;
+			case UP:
+				this->y -= this->speed;
+				break;
+			case DOWN:
+				this->y += this->speed;
+				break;
+			case LEFT:
+				this->x -= this->speed;
+				break;
+			case RIGHT:
+				this->x += this->speed;
+				break;
 		};
 	}
 
@@ -427,6 +473,16 @@ class GameObject
 		this->sizeH = sizeH;
 	}
 
+	float getSpeed()
+	{
+		return speed;
+	}
+
+	void setSpeed(float speed)
+	{
+		this->speed = speed;
+	}
+
 	float getRadius()
 	{
 		return radius;
@@ -437,12 +493,12 @@ class GameObject
 		this->radius = radius;
 	}
 
-	int getState()
+	obj_state getState()
 	{
 		return state;
 	}
 
-	void setState(int state)
+	void setState(obj_state state)
 	{
 		this->state = state;
 	}
@@ -481,10 +537,8 @@ class GameObject
 
 	bool getCollisionBB(GameObject *obj)	//Bounding Box Collision
 	{
-		if ((this->x > obj->x + obj->sizeW)	||
-			(this->y > obj->y + obj->sizeH)	||
-			(obj->x > this->x + this->sizeW)||
-			(obj->y > this->y + this->sizeH))
+		if ((this->x > obj->x + obj->sizeW) || (this->y > obj->y + obj->sizeH) ||
+			(obj->x > this->x + this->sizeW) || (obj->y > this->y + this->sizeH))
 			return false;
 
 		return true;
@@ -492,8 +546,7 @@ class GameObject
 
 	bool getCollisionPP(ALLEGRO_BITMAP *texture, ALLEGRO_BITMAP *objTexture, GameObject *obj)	//Pixel Perfect Collision
 	{
-		int ppBoxTop, ppBoxBottom,
-			ppBoxLeft, ppBoxRight;
+		int ppBoxTop, ppBoxBottom, ppBoxLeft, ppBoxRight;
 
 		if (!getCollisionBB(obj))
 			return false;

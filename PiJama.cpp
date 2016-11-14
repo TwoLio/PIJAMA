@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include <iostream>
-#include <glm/glm.hpp>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_ttf.h>
@@ -10,7 +9,7 @@
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_native_dialog.h>
-//#include <allegro5/allegro_opengl.h>
+#include <allegro5/allegro_opengl.h>
 
 #include "global.h"
 #include "function.h"
@@ -19,27 +18,26 @@
 
 int main(int argc, char **argv)
 {
-	const float 			FPS = 60.0f;
-	float 					gameTime = 0.0f;
-	int 					frames = 0;
-	int						gameFPS = 0;
+	const float FPS = 60.0f;
+	float gameTime = 0.0f;
+	int frames = 0,	gameFPS = 0;
 
-	ALLEGRO_TIMER			*timerFPS = NULL;
+	ALLEGRO_TIMER *timerFPS = NULL;
 
-	ALLEGRO_FONT			*font = NULL;
-	ALLEGRO_SAMPLE			*sample = NULL;
+	ALLEGRO_FONT *font = NULL;
+	ALLEGRO_SAMPLE *sample = NULL;
 
-//	ALLEGRO_KEYBOARD_STATE	keyState;
-//	ALLEGRO_MOUSE_STATE		mouseState;
+	ALLEGRO_KEYBOARD_STATE keyState;
+//	ALLEGRO_MOUSE_STATE mouseState;
 
-	ALLEGRO_EVENT_QUEUE		*eventQueue = NULL;
+	ALLEGRO_EVENT_QUEUE *eventQueue = NULL;
 
-	bool 					renderScene = true;
+	bool render = true;
 
 	if (!initAllegro())
 		return showMessageBox("Inizializzazione fallita a causa di un errore sconosciuto.", ALLEGRO_MESSAGEBOX_ERROR);
 
-	GameDisplay				*gameDisplay = new GameDisplay();
+	GameDisplay *gameDisplay = new GameDisplay();
 
 	if (!gameDisplay->display)
 		return showMessageBox("Errore creazione display", ALLEGRO_MESSAGEBOX_ERROR);
@@ -47,12 +45,12 @@ int main(int argc, char **argv)
 	SCREEN_WIDTH = gameDisplay->getScreenWidth();
 	SCREEN_HEIGHT = gameDisplay->getScreenHeight();
 
-	GameObject 				*bad = new GameObject(20, true, 250, 0, 200.0f);
-	GameObject 				*p1 = new GameObject(20, false, -250, -20);
-	GameObject 				*p2 = new GameObject(20, false, -250, 20);
+	GameObject *bad = new GameObject(20, ENEMY, true, 250, 0, 200.0f);
+	GameObject *p1 = new GameObject(20, PLAYER, false, -250, -20);
+	GameObject *p2 = new GameObject(20, FRIEND, true, -250, 20, 200.0f);
 
 	al_reserve_samples(1);
-	sample = al_load_sample("sfx/relax.wav");
+	sample = al_load_sample("sfx/wood.mp3");
 	font = al_load_ttf_font("gfx/font/amsterdam.ttf", 36, 0);
 	timerFPS = al_create_timer(1.0f / FPS);
 	eventQueue = al_create_event_queue();
@@ -69,8 +67,8 @@ int main(int argc, char **argv)
 
 	while(!exitGame)
 	{
-		ALLEGRO_EVENT 		event;
-		//ALLEGRO_TIMEOUT		timeout;
+		ALLEGRO_EVENT event;
+		//ALLEGRO_TIMEOUT timeout;
 		//al_init_timeout(&timeout, 0.06);
 		//bool getEvent = al_wait_for_event_until(eventQueue, &event, &timeout);
 		al_wait_for_event(eventQueue, &event);
@@ -86,8 +84,8 @@ int main(int argc, char **argv)
 		else if (event.type == ALLEGRO_EVENT_MOUSE_AXES ||
 				 event.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY)
 		{
-			p2->setX(event.mouse.x);
-			p2->setY(event.mouse.y);
+			//p2->setX(event.mouse.x);
+			//p2->setY(event.mouse.y);
 		}
 		else if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 		{
@@ -103,24 +101,29 @@ int main(int argc, char **argv)
 				frames = 0;
 			}
 
-			//al_get_keyboard_state(&keyState);
+			al_get_keyboard_state(&keyState);
 			//al_get_mouse_state(&mouseState);
 
+			if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE))
+				exitGame = true;
+
 			p1->update();
+
+			p2->update(bad, p1);
 
 			if (bad->getDistance(p1) < bad->getDistance(p2))
 				bad->update(p1);
 			else
 				bad->update(p2);
 
-			renderScene = true;
+			render = true;
 		}
 
-		if (renderScene && al_is_event_queue_empty(eventQueue))
+		if (render && al_is_event_queue_empty(eventQueue))
 		{
-			renderScene = false;
+			render = false;
 
-			al_draw_textf(font, al_map_rgb(255, 255, 255), 10, 70,
+			al_draw_textf(font, al_map_rgb(255, 255, 0), 10, 70,
 							ALLEGRO_ALIGN_LEFT, "%i", gameFPS);
 
 			p1->render(0, 0, 255);

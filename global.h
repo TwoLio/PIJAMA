@@ -1,8 +1,7 @@
 
-int		SCREEN_WIDTH = 0,
-		SCREEN_HEIGHT = 0;
+int	SCREEN_WIDTH = 0, SCREEN_HEIGHT = 0;
 
-bool 	exitGame = false,
+bool	exitGame = false,
 		keys[] = {	false, false, false, false, false,
 					false, false, false, false, false,
 					false, false, false, false, false,
@@ -16,7 +15,7 @@ bool 	exitGame = false,
 					false, false, false, false,	false,
 					false, false, false, false, false	};
 
-enum	game_keys
+enum game_keys
 {
 	UP, DOWN,
 	LEFT, RIGHT,
@@ -41,7 +40,7 @@ enum	game_keys
 	PAD_PLUS, PAD_MINUS
 };
 
-enum	game_states
+enum game_states
 {
 	MENU,
 	PLAY,
@@ -49,12 +48,22 @@ enum	game_states
 	CREDIT
 };
 
-enum	obj_states
+enum obj_type
+{
+	PLAYER,
+	FRIEND,
+	ENEMY,
+	ITEM,
+	BULLET,
+	WORLD_OBJ
+};
+
+enum obj_state
 {
 	IDLE,
 	WALK,
 	CHASE,
 	RETREAT,
 	ATTACK,
-	DEFENSE
+	DEFEND
 };
