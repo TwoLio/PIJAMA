@@ -11,19 +11,20 @@
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_opengl.h>
 
-#include "global.h"
 #include "function.h"
 #include "display.cpp"
-#include "object.cpp"
+#include "bot.cpp"
 
 /*	TODO
 	~ Migliorare IA dei bot friendly;
 	~ Aggiornare logica della zona di visione dei bot enemy:
 		facendola rimanere sempre intorno al bot (e non allo spawn) e ridurla;
+	~ Fixare Player::input() perché non risponde più ai comandi da tastiera 
 
 	~ Improve AI for friendly bot;
 	~ Update enemy sight logic:
 		switching from being fixed to spawnpoint, to following the enemy bot;
+	~ Fix Player::input() because keyboard input isn't working anymore
  */
 
 
@@ -56,9 +57,9 @@ int main(int argc, char **argv)
 	SCREEN_WIDTH = gameDisplay->getScreenWidth();
 	SCREEN_HEIGHT = gameDisplay->getScreenHeight();
 
-	GameObject *bad = new GameObject(20, ENEMY, true, 250, 0, 200.0f);
-	GameObject *p1 = new GameObject(20, PLAYER, false, -250, -20);
-	GameObject *p2 = new GameObject(20, FRIEND, true, -250, 20, 200.0f);
+	EnemyBot *bad = new EnemyBot();
+	Player *p1 = new Player();
+	Bot *p2 = new Bot();
 
 	al_reserve_samples(1);
 	sample = al_load_sample("sfx/wood.mp3");
@@ -86,11 +87,11 @@ int main(int argc, char **argv)
 
 		if (event.type == ALLEGRO_EVENT_KEY_DOWN)
 		{
-			p1->input(event.keyboard.keycode, true);
+			//p1->input(event.keyboard.keycode, true);
 		}
 		else if (event.type == ALLEGRO_EVENT_KEY_UP)
 		{
-			p1->input(event.keyboard.keycode, false);
+			//p1->input(event.keyboard.keycode, false);
 		}
 		else if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
 		{
@@ -103,8 +104,8 @@ int main(int argc, char **argv)
 		else if (event.type == ALLEGRO_EVENT_MOUSE_AXES ||
 				 event.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY)
 		{
-			//p2->setX(event.mouse.x);
-			//p2->setY(event.mouse.y);
+			p1->setX(event.mouse.x);
+			p1->setY(event.mouse.y);
 		}
 		else if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 		{
@@ -126,7 +127,7 @@ int main(int argc, char **argv)
 			if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE))
 				exitGame = true;
 
-			p1->update();
+			//p1->update();
 
 			p2->update(bad, p1);
 
@@ -156,7 +157,6 @@ int main(int argc, char **argv)
 	delete bad;
 	delete p2;
 	delete p1;
-
 	delete gameDisplay;
 
 	al_shutdown_native_dialog_addon();

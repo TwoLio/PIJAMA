@@ -1,18 +1,23 @@
+#pragma once
+
 int	SCREEN_WIDTH = 0, SCREEN_HEIGHT = 0;
 
-bool	exitGame = false,
-		keys[] = {	false, false, false, false, false,
-					false, false, false, false, false,
-					false, false, false, false, false,
-					false, false, false, false, false,
-					false, false, false, false,	false,
-					false, false, false, false, false,
-					false, false, false, false, false,
-					false, false, false, false, false,
-					false, false, false, false,	false,
-					false, false, false, false, false,
-					false, false, false, false,	false,
-					false, false, false, false, false	};
+bool exitGame = false;
+
+const int MAX_KEYS = 60;
+
+bool keys[MAX_KEYS] = {	false, false, false, false, false,
+						false, false, false, false, false,
+						false, false, false, false, false,
+						false, false, false, false, false,
+						false, false, false, false,	false,
+						false, false, false, false, false,
+						false, false, false, false, false,
+						false, false, false, false, false,
+						false, false, false, false,	false,
+						false, false, false, false, false,
+						false, false, false, false,	false,
+						false, false, false, false, false	};
 
 enum game_keys
 {
