@@ -1,15 +1,13 @@
 OBJ = PiJama.o display.o function.o
-FLAGS = -Wall -std=c++11 -lGL -lm
+FLAGS = -Wall -std=c++11 -lm
 PKG = `pkg-config --cflags --libs allegro-5 allegro_acodec-5 allegro_audio-5 allegro_color-5 allegro_dialog-5 allegro_font-5 allegro_image-5 allegro_main-5 allegro_memfile-5 allegro_physfs-5 allegro_primitives-5 allegro_ttf-5`
 
 PiJama: $(OBJ)
 	g++ $(FLAGS) -o PiJama $(OBJ) $(PKG)
 
-PiJama.o: PiJama.cpp global.h function.h object.cpp display.cpp
+PiJama.o: PiJama.cpp global.h function.h bot.cpp display.cpp
 function.o: function.cpp function.h
-object.o: object.cpp
 display.o: display.cpp
-
 
 clean:
 	rm *.o
