@@ -16,7 +16,7 @@
 #include "display.cpp"
 #include "object.cpp"
 
-/*	TODO 
+/*	TODO
 	~ Migliorare IA dei bot friendly;
 	~ Aggiornare logica della zona di visione dei bot enemy:
 		facendola rimanere sempre intorno al bot (e non allo spawn) e ridurla;
@@ -92,6 +92,14 @@ int main(int argc, char **argv)
 		{
 			p1->input(event.keyboard.keycode, false);
 		}
+		else if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+		{
+
+		}
+		else if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+		{
+
+		}
 		else if (event.type == ALLEGRO_EVENT_MOUSE_AXES ||
 				 event.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY)
 		{
@@ -100,7 +108,7 @@ int main(int argc, char **argv)
 		}
 		else if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 		{
-			break;
+			exitGame = true;
 		}
 		else if (event.type == ALLEGRO_EVENT_TIMER)
 		{

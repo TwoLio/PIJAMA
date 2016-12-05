@@ -1,4 +1,3 @@
-
 int	SCREEN_WIDTH = 0, SCREEN_HEIGHT = 0;
 
 bool	exitGame = false,
