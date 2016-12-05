@@ -26,10 +26,20 @@ bool initAllegro()
 	return true;
 }
 
-
 void changeState(int &state, int newState)
 {
 	state = newState;
+}
+
+
+ALLEGRO_BITMAP*	createBitmap(int &w_size, int &h_size)
+{
+	ALLEGRO_BITMAP *bmp = al_create_bitmap(w_size, h_size);
+	al_set_target_bitmap(bmp);
+	al_clear_to_color(al_map_rgb(255, 255, 255));
+	al_set_target_bitmap(al_get_backbuffer(al_get_current_display()));
+
+	return bmp;
 }
 
 int showMessageBox(const char *text, int flag, const char *button = NULL)
@@ -89,8 +99,3 @@ int showMessageBox(const char *text, int flag, const char *button = NULL)
 
 	return -1;																	// -1: Errore // 0: Chiusura // 1: Ok/Yes // 2: Cancel/No
 }
-
-/*	bad.bmp = al_create_bitmap(bad.size, bad.size);
-	al_set_target_bitmap(bad.bmp);
-	al_clear_to_color(al_map_rgb(255, 0, 255));
-	al_set_target_bitmap(al_get_backbuffer(display));	*/
