@@ -36,8 +36,8 @@ class GameObject
 	bool NPC;
 
 	public:
-	ALLEGRO_BITMAP	**texture = NULL;
-//	ALLEGRO_SAMPLE	**sound = NULL;
+	ALLEGRO_BITMAP	*texture = NULL;
+//	ALLEGRO_SAMPLE	*sound = NULL;
 //	ALLEGRO_TIMER	*timer = NULL;
 
 	GameObject(int size, obj_type type, bool NPC, float offsetX = 0.0f, float offsetY = 0.0f, float sight = 0.0f)
@@ -66,193 +66,6 @@ class GameObject
 		//al_destroy_bitmap(texture);
 		//al_destroy_timer(timer);
 		//al_destroy_sample(sound);
-	}
-
-	void input(int &keycode, bool keyFlag)
-	{
-		switch (keycode)
-		{
-			case ALLEGRO_KEY_UP:
-				keys[UP] = keyFlag;
-				break;
-			case ALLEGRO_KEY_DOWN:
-				keys[DOWN] = keyFlag;
-				break;
-			case ALLEGRO_KEY_LEFT:
-				keys[LEFT] = keyFlag;
-				break;
-			case ALLEGRO_KEY_RIGHT:
-				keys[RIGHT] = keyFlag;
-				break;
-			case ALLEGRO_KEY_SPACE:
-				keys[SPACE] = keyFlag;
-				break;
-			case ALLEGRO_KEY_ENTER:
-				keys[ENTER] = keyFlag;
-				break;
-			case ALLEGRO_KEY_ALT:
-				keys[ALT] = keyFlag;
-				break;
-			case ALLEGRO_KEY_ALTGR:
-				keys[ALTGR] = keyFlag;
-				break;
-			case ALLEGRO_KEY_ESCAPE:
-				keys[ESCAPE] = keyFlag;
-				break;
-			case ALLEGRO_KEY_BACKSPACE:
-				keys[BACKSPACE] = keyFlag;
-				break;
-			case ALLEGRO_KEY_LSHIFT:
-				keys[LSHIFT] = keyFlag;
-				break;
-			case ALLEGRO_KEY_RSHIFT:
-				keys[RSHIFT] = keyFlag;
-				break;
-			case ALLEGRO_KEY_LCTRL:
-				keys[LCTRL] = keyFlag;
-				break;
-			case ALLEGRO_KEY_RCTRL:
-				keys[RCTRL] = keyFlag;
-				break;
-			case ALLEGRO_KEY_TAB:
-				keys[TAB] = keyFlag;
-				break;
-			case ALLEGRO_KEY_DELETE:
-				keys[DEL] = keyFlag;
-				break;
-			case ALLEGRO_KEY_HOME:
-				keys[HOME] = keyFlag;
-				break;
-			case ALLEGRO_KEY_END:
-				keys[END] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PGUP:
-				keys[PGUP] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PGDN:
-				keys[PGDN] = keyFlag;
-				break;
-			case ALLEGRO_KEY_A:
-				keys[A] = keyFlag;
-				break;
-			case ALLEGRO_KEY_B:
-				keys[B] = keyFlag;
-				break;
-			case ALLEGRO_KEY_C:
-				keys[C] = keyFlag;
-				break;
-			case ALLEGRO_KEY_D:
-				keys[D] = keyFlag;
-				break;
-			case ALLEGRO_KEY_E:
-				keys[E] = keyFlag;
-				break;
-			case ALLEGRO_KEY_F:
-				keys[F] = keyFlag;
-				break;
-			case ALLEGRO_KEY_G:
-				keys[G] = keyFlag;
-				break;
-			case ALLEGRO_KEY_H:
-				keys[H] = keyFlag;
-				break;
-			case ALLEGRO_KEY_I:
-				keys[I] = keyFlag;
-				break;
-			case ALLEGRO_KEY_J:
-				keys[J] = keyFlag;
-				break;
-			case ALLEGRO_KEY_K:
-				keys[K] = keyFlag;
-				break;
-			case ALLEGRO_KEY_L:
-				keys[L] = keyFlag;
-				break;
-			case ALLEGRO_KEY_M:
-				keys[M] = keyFlag;
-				break;
-			case ALLEGRO_KEY_N:
-				keys[N] = keyFlag;
-				break;
-			case ALLEGRO_KEY_O:
-				keys[O] = keyFlag;
-				break;
-			case ALLEGRO_KEY_P:
-				keys[P] = keyFlag;
-				break;
-			case ALLEGRO_KEY_Q:
-				keys[Q] = keyFlag;
-				break;
-			case ALLEGRO_KEY_R:
-				keys[R] = keyFlag;
-				break;
-			case ALLEGRO_KEY_S:
-				keys[S] = keyFlag;
-				break;
-			case ALLEGRO_KEY_T:
-				keys[T] = keyFlag;
-				break;
-			case ALLEGRO_KEY_U:
-				keys[U] = keyFlag;
-				break;
-			case ALLEGRO_KEY_V:
-				keys[V] = keyFlag;
-				break;
-			case ALLEGRO_KEY_W:
-				keys[W] = keyFlag;
-				break;
-			case ALLEGRO_KEY_X:
-				keys[X] = keyFlag;
-				break;
-			case ALLEGRO_KEY_Y:
-				keys[Y] = keyFlag;
-				break;
-			case ALLEGRO_KEY_Z:
-				keys[Z] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_0:
-				keys[PAD_0] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_1:
-				keys[PAD_1] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_2:
-				keys[PAD_2] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_3:
-				keys[PAD_3] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_4:
-				keys[PAD_4] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_5:
-				keys[PAD_5] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_6:
-				keys[PAD_6] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_7:
-				keys[PAD_7] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_8:
-				keys[PAD_8] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_9:
-				keys[PAD_9] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_ENTER:
-				keys[PAD_ENTER] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_DELETE:
-				keys[PAD_DEL] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_PLUS:
-				keys[PAD_PLUS] = keyFlag;
-				break;
-			case ALLEGRO_KEY_PAD_MINUS:
-				keys[PAD_MINUS] = keyFlag;
-				break;
-		}			
 	}
 
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
@@ -573,4 +386,192 @@ class GameObject
 		}
 		return false;
 	}
+
+	void input(int &keycode, bool keyFlag)
+	{
+		switch (keycode)
+		{
+			case ALLEGRO_KEY_UP:
+				keys[UP] = keyFlag;
+				break;
+			case ALLEGRO_KEY_DOWN:
+				keys[DOWN] = keyFlag;
+				break;
+			case ALLEGRO_KEY_LEFT:
+				keys[LEFT] = keyFlag;
+				break;
+			case ALLEGRO_KEY_RIGHT:
+				keys[RIGHT] = keyFlag;
+				break;
+			case ALLEGRO_KEY_SPACE:
+				keys[SPACE] = keyFlag;
+				break;
+			case ALLEGRO_KEY_ENTER:
+				keys[ENTER] = keyFlag;
+				break;
+			case ALLEGRO_KEY_ALT:
+				keys[ALT] = keyFlag;
+				break;
+			case ALLEGRO_KEY_ALTGR:
+				keys[ALTGR] = keyFlag;
+				break;
+			case ALLEGRO_KEY_ESCAPE:
+				keys[ESCAPE] = keyFlag;
+				break;
+			case ALLEGRO_KEY_BACKSPACE:
+				keys[BACKSPACE] = keyFlag;
+				break;
+			case ALLEGRO_KEY_LSHIFT:
+				keys[LSHIFT] = keyFlag;
+				break;
+			case ALLEGRO_KEY_RSHIFT:
+				keys[RSHIFT] = keyFlag;
+				break;
+			case ALLEGRO_KEY_LCTRL:
+				keys[LCTRL] = keyFlag;
+				break;
+			case ALLEGRO_KEY_RCTRL:
+				keys[RCTRL] = keyFlag;
+				break;
+			case ALLEGRO_KEY_TAB:
+				keys[TAB] = keyFlag;
+				break;
+			case ALLEGRO_KEY_DELETE:
+				keys[DEL] = keyFlag;
+				break;
+			case ALLEGRO_KEY_HOME:
+				keys[HOME] = keyFlag;
+				break;
+			case ALLEGRO_KEY_END:
+				keys[END] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PGUP:
+				keys[PGUP] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PGDN:
+				keys[PGDN] = keyFlag;
+				break;
+			case ALLEGRO_KEY_A:
+				keys[A] = keyFlag;
+				break;
+			case ALLEGRO_KEY_B:
+				keys[B] = keyFlag;
+				break;
+			case ALLEGRO_KEY_C:
+				keys[C] = keyFlag;
+				break;
+			case ALLEGRO_KEY_D:
+				keys[D] = keyFlag;
+				break;
+			case ALLEGRO_KEY_E:
+				keys[E] = keyFlag;
+				break;
+			case ALLEGRO_KEY_F:
+				keys[F] = keyFlag;
+				break;
+			case ALLEGRO_KEY_G:
+				keys[G] = keyFlag;
+				break;
+			case ALLEGRO_KEY_H:
+				keys[H] = keyFlag;
+				break;
+			case ALLEGRO_KEY_I:
+				keys[I] = keyFlag;
+				break;
+			case ALLEGRO_KEY_J:
+				keys[J] = keyFlag;
+				break;
+			case ALLEGRO_KEY_K:
+				keys[K] = keyFlag;
+				break;
+			case ALLEGRO_KEY_L:
+				keys[L] = keyFlag;
+				break;
+			case ALLEGRO_KEY_M:
+				keys[M] = keyFlag;
+				break;
+			case ALLEGRO_KEY_N:
+				keys[N] = keyFlag;
+				break;
+			case ALLEGRO_KEY_O:
+				keys[O] = keyFlag;
+				break;
+			case ALLEGRO_KEY_P:
+				keys[P] = keyFlag;
+				break;
+			case ALLEGRO_KEY_Q:
+				keys[Q] = keyFlag;
+				break;
+			case ALLEGRO_KEY_R:
+				keys[R] = keyFlag;
+				break;
+			case ALLEGRO_KEY_S:
+				keys[S] = keyFlag;
+				break;
+			case ALLEGRO_KEY_T:
+				keys[T] = keyFlag;
+				break;
+			case ALLEGRO_KEY_U:
+				keys[U] = keyFlag;
+				break;
+			case ALLEGRO_KEY_V:
+				keys[V] = keyFlag;
+				break;
+			case ALLEGRO_KEY_W:
+				keys[W] = keyFlag;
+				break;
+			case ALLEGRO_KEY_X:
+				keys[X] = keyFlag;
+				break;
+			case ALLEGRO_KEY_Y:
+				keys[Y] = keyFlag;
+				break;
+			case ALLEGRO_KEY_Z:
+				keys[Z] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_0:
+				keys[PAD_0] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_1:
+				keys[PAD_1] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_2:
+				keys[PAD_2] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_3:
+				keys[PAD_3] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_4:
+				keys[PAD_4] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_5:
+				keys[PAD_5] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_6:
+				keys[PAD_6] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_7:
+				keys[PAD_7] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_8:
+				keys[PAD_8] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_9:
+				keys[PAD_9] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_ENTER:
+				keys[PAD_ENTER] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_DELETE:
+				keys[PAD_DEL] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_PLUS:
+				keys[PAD_PLUS] = keyFlag;
+				break;
+			case ALLEGRO_KEY_PAD_MINUS:
+				keys[PAD_MINUS] = keyFlag;
+				break;
+		}			
+	}
+
 };
