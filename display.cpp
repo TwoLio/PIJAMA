@@ -11,12 +11,11 @@ class GameDisplay
 {
 	protected:
 	//ALLEGRO_BITMAP		*icon = NULL;
+	ALLEGRO_DISPLAY 		*display = NULL;
 	ALLEGRO_DISPLAY_MODE	displayMode;
 	int						numDisplayModes;
 
 	public:
-	ALLEGRO_DISPLAY 		*display = NULL;
-
 	GameDisplay()
 	{
 		al_inhibit_screensaver(true);
@@ -44,6 +43,11 @@ class GameDisplay
 	{
 		al_flip_display();
 		al_clear_to_color(al_map_rgb(0, 0, 0));
+	}
+
+	ALLEGRO_DISPLAY* getDisplay()
+	{
+		return display;
 	}
 
 	int getScreenWidth()
