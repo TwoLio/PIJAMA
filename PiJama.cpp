@@ -19,12 +19,10 @@
 	~ Migliorare IA dei bot friendly;
 	~ Aggiornare logica della zona di visione dei bot enemy:
 		facendola rimanere sempre intorno al bot (e non allo spawn) e ridurla;
-	~ Fixare Player::input() perché non risponde più ai comandi da tastiera 
 
 	~ Improve AI for friendly bot;
 	~ Update enemy sight logic:
 		switching from being fixed to spawnpoint, to following the enemy bot;
-	~ Fix Player::input() because keyboard input isn't working anymore
  */
 
 
@@ -33,7 +31,6 @@ int main(int argc, char **argv)
 	const float FPS = 60.0f;
 	float gameTime = 0.0f;
 	int frames = 0,	gameFPS = 0;
-
 	ALLEGRO_TIMER *timerFPS = NULL;
 
 	ALLEGRO_FONT *font = NULL;
@@ -51,15 +48,15 @@ int main(int argc, char **argv)
 
 	GameDisplay *gameDisplay = new GameDisplay();
 
-	if (!gameDisplay->display)
+	if (!gameDisplay->getDisplay())
 		return showMessageBox("Errore creazione display", ALLEGRO_MESSAGEBOX_ERROR);
 
 	SCREEN_WIDTH = gameDisplay->getScreenWidth();
 	SCREEN_HEIGHT = gameDisplay->getScreenHeight();
 
-	EnemyBot *bad = new EnemyBot();
-	Player *p1 = new Player();
-	Bot *p2 = new Bot();
+	EnemyBot *bad = new EnemyBot();	//IDLE, ENEMY, 20, 250.f, 0.f, 200.f, 2.5f
+	Player *p1 = new Player();		//WALK, PLAYER, 20, -250.f, -20.f, 0.f, 2.5f
+	Bot *p2 = new Bot();			//IDLE, FRIEND, 20, -250.f, 20.f, 200.f, 2.5f
 
 	al_reserve_samples(1);
 	sample = al_load_sample("sfx/wood.mp3");
@@ -68,7 +65,7 @@ int main(int argc, char **argv)
 	eventQueue = al_create_event_queue();
 
 	al_register_event_source(eventQueue, al_get_timer_event_source(timerFPS));
-	al_register_event_source(eventQueue, al_get_display_event_source(gameDisplay->display));
+	al_register_event_source(eventQueue, al_get_display_event_source(gameDisplay->getDisplay()));
 	al_register_event_source(eventQueue, al_get_mouse_event_source());
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
@@ -87,11 +84,11 @@ int main(int argc, char **argv)
 
 		if (event.type == ALLEGRO_EVENT_KEY_DOWN)
 		{
-			//p1->input(event.keyboard.keycode, true);
+			p1->input(event.keyboard.keycode, true);
 		}
 		else if (event.type == ALLEGRO_EVENT_KEY_UP)
 		{
-			//p1->input(event.keyboard.keycode, false);
+			p1->input(event.keyboard.keycode, false);
 		}
 		else if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
 		{
@@ -104,8 +101,8 @@ int main(int argc, char **argv)
 		else if (event.type == ALLEGRO_EVENT_MOUSE_AXES ||
 				 event.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY)
 		{
-			p1->setX(event.mouse.x);
-			p1->setY(event.mouse.y);
+			//p1->setX(event.mouse.x);
+			//p1->setY(event.mouse.y);
 		}
 		else if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 		{
@@ -127,7 +124,7 @@ int main(int argc, char **argv)
 			if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE))
 				exitGame = true;
 
-			//p1->update();
+			p1->update();
 
 			p2->update(bad, p1);
 
