@@ -54,9 +54,9 @@ int main(int argc, char **argv)
 	SCREEN_WIDTH = gameDisplay->getScreenWidth();
 	SCREEN_HEIGHT = gameDisplay->getScreenHeight();
 
-	EnemyBot *bad = new EnemyBot();	//IDLE, ENEMY, 20, 250.f, 0.f, 200.f, 2.5f
-	Player *p1 = new Player();		//WALK, PLAYER, 20, -250.f, -20.f, 0.f, 2.5f
-	Bot *p2 = new Bot();			//IDLE, FRIEND, 20, -250.f, 20.f, 200.f, 2.5f
+	Player		*p1 = new Player();			//WALK, PLAYER, 20, -250.f, -20.f, 0.f, 2.5f
+	Bot			*f_bot = new Bot();			//IDLE, FRIEND, 20, -250.f, 20.f, 200.f, 2.5f
+	EnemyBot	*e_bot = new EnemyBot();	//IDLE, ENEMY, 20, 250.f, 0.f, 200.f, 2.5f
 
 	al_reserve_samples(1);
 	sample = al_load_sample("sfx/wood.mp3");
@@ -126,12 +126,12 @@ int main(int argc, char **argv)
 
 			p1->update();
 
-			p2->update(bad, p1);
+			f_bot->update(e_bot, p1);
 
-			if (bad->getDistance(p1) < bad->getDistance(p2))
-				bad->update(p1);
+			if (e_bot->getDistance(p1) < e_bot->getDistance(f_bot))
+				e_bot->update(p1);
 			else
-				bad->update(p2);
+				e_bot->update(f_bot);
 
 			render = true;
 		}
@@ -144,15 +144,15 @@ int main(int argc, char **argv)
 							ALLEGRO_ALIGN_LEFT, "%i", gameFPS);
 
 			p1->render(0, 0, 255);
-			p2->render(0, 255, 0);
-			bad->render();
+			f_bot->render(0, 255, 0);
+			e_bot->render();
 
 			gameDisplay->draw();
 		}
 	}
 
-	delete bad;
-	delete p2;
+	delete e_bot;
+	delete f_bot;
 	delete p1;
 	delete gameDisplay;
 
