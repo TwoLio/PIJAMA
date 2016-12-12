@@ -25,7 +25,6 @@
 		switching from being fixed to spawnpoint, to following the enemy bot;
  */
 
-
 int main(int argc, char **argv)
 {
 	const float FPS = 60.0f;
@@ -143,8 +142,8 @@ int main(int argc, char **argv)
 			al_draw_textf(font, al_map_rgb(255, 255, 0), 10, 70,
 							ALLEGRO_ALIGN_LEFT, "%i", gameFPS);
 
-			p1->render(0, 0, 255);
-			f_bot->render(0, 255, 0);
+			p1->render();
+			f_bot->render();
 			e_bot->render();
 
 			gameDisplay->draw();
