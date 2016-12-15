@@ -1,12 +1,22 @@
 #include "object.cpp"
 
+/*	TODO
+	~ Migliorare IA dei bot friendly;
+	~ Aggiornare logica della zona di visione dei bot enemy:
+		facendola rimanere sempre intorno al bot (e non allo spawn) e ridurla;
+
+	~ Improve AI for friendly bot;
+	~ Update enemy sight logic:
+		switching from being fixed to spawnpoint, to following the enemy bot;
+ */
+
 class EnemyBot : public GameObject
 {
 	public:
 	EnemyBot(obj_state state = IDLE, obj_type type = ENEMY,
 			int size = 32,
 			float offsetX = 250.0f, float offsetY = 0.0f,
-			float sight = 200.0f, float speed = 2.5f)	:
+			float sight = 100.0f, float speed = 2.5f)	:
 	GameObject(state, type, size, offsetX, offsetY, sight, speed)	{}
 
 	void render(int r = 255, int g = 0, int b = 0)
@@ -18,7 +28,7 @@ class EnemyBot : public GameObject
 		al_draw_bitmap_region(this->texture,
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x, this->y,
+							this->x - sizeW / 2, this->y - sizeH / 2,
 							NULL);
 /*		al_draw_filled_rectangle(this->x - 16, this->y - 16,
 								this->x + 16, this->y + 16,
@@ -73,7 +83,7 @@ class Bot : public GameObject
 	Bot(obj_state state = IDLE, obj_type type = FRIEND,
 		int size = 32,
 		float offsetX = -250.0f, float offsetY = 20.0f,
-		float sight = 200.0f, float speed = 2.5f)	:
+		float sight = 100.0f, float speed = 2.5f)	:
 	GameObject(state, type, size, offsetX, offsetY, sight, speed)	{}
 
 	void render(int r = 0, int g = 255, int b = 0)
@@ -85,7 +95,7 @@ class Bot : public GameObject
 		al_draw_bitmap_region(this->texture,
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x, this->y,
+							this->x - sizeW / 2, this->y - sizeH / 2,
 							NULL);
 /*		al_draw_filled_rectangle(this->x - 16, this->y - 16,
 								this->x + 16, this->y + 16,
@@ -151,7 +161,7 @@ class Player : public GameObject
 		al_draw_bitmap_region(this->texture,
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x, this->y,
+							this->x - sizeW / 2, this->y - sizeH / 2,
 							NULL);
 	}
 

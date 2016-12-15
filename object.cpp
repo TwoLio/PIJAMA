@@ -115,7 +115,7 @@ class GameObject
 		else if (this->state == IDLE)
 			this->textSourceX = this->sizeW;
 
-		if (this->textSourceX >= this->getTextureWidth())
+		if (this->textSourceX >= this->sizeW * 3)
 			this->textSourceX = 0;
 
 		this->textSourceY = this->direction * (this->getTextureHeight() / this->colFrame);

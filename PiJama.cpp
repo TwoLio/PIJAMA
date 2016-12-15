@@ -15,16 +15,6 @@
 #include "display.cpp"
 #include "bot.cpp"
 
-/*	TODO
-	~ Migliorare IA dei bot friendly;
-	~ Aggiornare logica della zona di visione dei bot enemy:
-		facendola rimanere sempre intorno al bot (e non allo spawn) e ridurla;
-
-	~ Improve AI for friendly bot;
-	~ Update enemy sight logic:
-		switching from being fixed to spawnpoint, to following the enemy bot;
- */
-
 int main(int argc, char **argv)
 {
 	const float FPS = 30.0f;
