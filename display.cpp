@@ -54,6 +54,7 @@ class GameDisplay
 	{
 		return displayMode.width;
 	}
+
 	int getScreenHeight()
 	{
 		return displayMode.height;
@@ -63,9 +64,9 @@ class GameDisplay
 	{
 		return al_get_display_width(display);
 	}
+
 	int getDisplayHeight()
 	{
 		return al_get_display_height(display);
 	}
-
 };
