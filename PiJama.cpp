@@ -27,7 +27,7 @@
 
 int main(int argc, char **argv)
 {
-	const float FPS = 60.0f;
+	const float FPS = 30.0f;
 	float gameTime = 0.0f;
 	int frames = 0,	gameFPS = 0;
 	ALLEGRO_TIMER *timerFPS = NULL;
