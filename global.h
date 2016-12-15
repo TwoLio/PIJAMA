@@ -71,3 +71,11 @@ enum obj_state
 	ATTACK,
 	DEFEND
 };
+
+enum obj_dir
+{
+	SOUTH,
+	WEST,
+	EAST,
+	NORTH
+};

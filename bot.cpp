@@ -4,7 +4,7 @@ class EnemyBot : public GameObject
 {
 	public:
 	EnemyBot(obj_state state = IDLE, obj_type type = ENEMY,
-			int size = 20,
+			int size = 32,
 			float offsetX = 250.0f, float offsetY = 0.0f,
 			float sight = 200.0f, float speed = 2.5f)	:
 	GameObject(state, type, size, offsetX, offsetY, sight, speed)	{}
@@ -15,9 +15,14 @@ class EnemyBot : public GameObject
 						al_map_rgba(255, 255, 255, 128), 1);
 		al_draw_circle(this->x, this->y, this->sight,
 						al_map_rgba(r, g, b, 128), 1);
-		al_draw_filled_rectangle(this->x - 10, this->y - 10,
-								this->x + 10, this->y + 10,
-								al_map_rgb(r, g, b));
+		al_draw_bitmap_region(this->texture,
+							this->textSourceX, this->textSourceY,
+							this->sizeW, this->sizeH,
+							this->x, this->y,
+							NULL);
+/*		al_draw_filled_rectangle(this->x - 16, this->y - 16,
+								this->x + 16, this->y + 16,
+								al_map_rgb(r, g, b));*/
 	}
 
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
@@ -55,6 +60,8 @@ class EnemyBot : public GameObject
 					this->state = CHASE;
 			}
 		}
+
+		this->updateAnimation();
 	}
 
 	void input()	{}
@@ -64,7 +71,7 @@ class Bot : public GameObject
 {
 	public:
 	Bot(obj_state state = IDLE, obj_type type = FRIEND,
-		int size = 20,
+		int size = 32,
 		float offsetX = -250.0f, float offsetY = 20.0f,
 		float sight = 200.0f, float speed = 2.5f)	:
 	GameObject(state, type, size, offsetX, offsetY, sight, speed)	{}
@@ -75,9 +82,14 @@ class Bot : public GameObject
 						al_map_rgba(255, 255, 255, 128), 1);
 		al_draw_circle(this->x, this->y, this->sight,
 						al_map_rgba(r, g, b, 128), 1);
-		al_draw_filled_rectangle(this->x - 10, this->y - 10,
-								this->x + 10, this->y + 10,
-								al_map_rgb(r, g, b));
+		al_draw_bitmap_region(this->texture,
+							this->textSourceX, this->textSourceY,
+							this->sizeW, this->sizeH,
+							this->x, this->y,
+							NULL);
+/*		al_draw_filled_rectangle(this->x - 16, this->y - 16,
+								this->x + 16, this->y + 16,
+								al_map_rgb(r, g, b));*/
 	}
 
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
@@ -103,18 +115,20 @@ class Bot : public GameObject
 		}
 		else if (this->state == DEFEND)
 		{
-			if (30 >= this->getDistance(obj->x, obj->y))
+			if (64 >= this->getDistance(obj->x, obj->y))
 			{
 				this->state = IDLE;
 			}
 			else
 			{
-				this->follow(obj->x, obj->y);
+				this->follow(obj);
 
 				if (this->sight > this->getDistance(target))
 					this->state = ATTACK;
 			}
 		}
+
+		this->updateAnimation();
 	}
 
 	void input()	{}
@@ -124,28 +138,39 @@ class Player : public GameObject
 {
 	public:
 	Player(obj_state state = WALK, obj_type type = PLAYER,
-			int size = 20,
+			int size = 32,
 			float offsetX = -250.0f, float offsetY = -20.0f,
 			float sight = 0.0f, float speed = 2.5f)	:
 	GameObject(state, type, size, offsetX, offsetY, sight, speed)	{}
 
 	void render(int r = 0, int g = 0, int b = 255)
 	{
-		al_draw_filled_rectangle(this->x - 10, this->y - 10,
-								this->x + 10, this->y + 10,
-								al_map_rgb(r, g, b));
+/*		al_draw_filled_rectangle(this->x - 16, this->y - 16,
+								this->x + 16, this->y + 16,
+								al_map_rgb(r, g, b));*/
+		al_draw_bitmap_region(this->texture,
+							this->textSourceX, this->textSourceY,
+							this->sizeW, this->sizeH,
+							this->x, this->y,
+							NULL);
 	}
 
 	void update()
 	{
+		this->state = WALK;
+
 		if (keys[UP] && this->y >= 5.0)
 			this->move(UP);
-		if (keys[DOWN] && this->y <= SCREEN_HEIGHT - this->sizeH - 5.0)
+		else if (keys[DOWN] && this->y <= SCREEN_HEIGHT - this->sizeH - 5.0)
 			this->move(DOWN);
-		if (keys[LEFT] && this->x >= 5.0)
+		else if (keys[LEFT] && this->x >= 5.0)
 			this->move(LEFT);
-		if (keys[RIGHT] && this->x <= SCREEN_WIDTH - this->sizeW - 5.0)
+		else if (keys[RIGHT] && this->x <= SCREEN_WIDTH - this->sizeW - 5.0)
 			this->move(RIGHT);
+		else
+			this->state = IDLE;
+
+		this->updateAnimation();
 	}
 
 	void input(int &keycode, bool keyFlag)

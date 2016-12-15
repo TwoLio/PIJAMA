@@ -35,33 +35,46 @@ class GameObject
 
 	obj_state state;
 	obj_type type;
+	obj_dir direction;
 
 	ALLEGRO_BITMAP	*texture = NULL;
 //	ALLEGRO_SAMPLE	*sound = NULL;
 //	ALLEGRO_TIMER	*timer = NULL;
+
+	float textSourceX;		//Variables for sprite sheet animation
+	float textSourceY;
+	int rowFrame;
+	int colFrame;
 
 	GameObject(obj_state state, obj_type type,
 				int size,
 				float offsetX = 0.0f, float offsetY = 0.0f,
 				float sight = 0.0f, float speed = 2.5f)
 	{
-		this->x = this->spawnX = (SCREEN_WIDTH / 2 - size / 2) + offsetX;
-		this->y = this->spawnY = (SCREEN_HEIGHT / 2 - size / 2) + offsetY;
+		this->radius = size / 2;
 		this->sizeH = size;
 		this->sizeW = size;
 
+		this->x = this->spawnX = (SCREEN_WIDTH / 2 - this->sizeW / 2) + offsetX;
+		this->y = this->spawnY = (SCREEN_HEIGHT / 2 - this->sizeH / 2) + offsetY;
+
 		this->state = state;
 		this->type = type;
+		this->direction = SOUTH;
 
 		this->sight = sight;
 		this->speed = speed;
 
-		this->radius = size / 2;
+		this->setTexture("gfx/sheet/test_1.png");
+		this->textSourceX = size;
+		this->textSourceY = 0;
+		this->rowFrame = 12;
+		this->colFrame = 8;
 	}
 
 	~GameObject()	
 	{
-		//al_destroy_bitmap(texture);
+		al_destroy_bitmap(texture);
 		//al_destroy_timer(timer);
 		//al_destroy_sample(sound);
 	}
@@ -85,26 +98,53 @@ class GameObject
 		return texture;
 	}
 
+	float getTextureWidth()
+	{
+		return al_get_bitmap_width(this->texture);
+	}
+
+	float getTextureHeight()
+	{
+		return al_get_bitmap_height(this->texture);
+	}
+
+	void updateAnimation()
+	{
+		if (this->state == WALK || this->state == CHASE || this->state == DEFEND)
+			this->textSourceX += this->getTextureWidth() / this->rowFrame;
+		else if (this->state == IDLE)
+			this->textSourceX = this->sizeW;
+
+		if (this->textSourceX >= this->getTextureWidth())
+			this->textSourceX = 0;
+
+		this->textSourceY = this->direction * (this->getTextureHeight() / this->colFrame);
+	}
+
 	void move(int dir)
 	{
 		switch (dir)
 		{
-			case UP:
-				this->y -= this->speed;
-				break;
-			case DOWN:
-				this->y += this->speed;
-				break;
-			case LEFT:
-				this->x -= this->speed;
-				break;
-			case RIGHT:
-				this->x += this->speed;
-				break;
+		case UP:
+			this->y -= this->speed;
+			this->direction = NORTH;
+			break;
+		case DOWN:
+			this->y += this->speed;
+			this->direction = SOUTH;
+			break;
+		case LEFT:
+			this->x -= this->speed;
+			this->direction = WEST;
+			break;
+		case RIGHT:
+			this->x += this->speed;
+			this->direction = EAST;
+			break;
 		};
 	}
 
-	void follow(GameObject *obj)
+	/*void follow(GameObject *obj)
 	{
 		float angle = this->getAngle(obj);
 		this->x += (2 * cos(angle));
@@ -116,6 +156,48 @@ class GameObject
 		float angle = this->getAngle(x, y);
 		this->x += (2 * cos(angle));
 		this->y += (2 * sin(angle));
+	}*/
+
+	void follow(GameObject *obj)
+	{
+		float dx = this->x - obj->x;
+		float dy = this->y - obj->y;
+
+		if (abs(dx) > abs(dy))
+		{
+			if (dx < 0)
+				this->move(RIGHT);
+			else
+				this->move(LEFT);
+		}
+		else
+		{
+			if (dy < 0)
+				this->move(DOWN);
+			else
+				this->move(UP);
+		}
+	}
+
+	void follow(float x, float y)
+	{
+		float dx = this->x - x;
+		float dy = this->y - y;
+
+		if (abs(dx) > abs(dy))
+		{
+			if (dx < 0)
+				this->move(RIGHT);
+			else
+				this->move(LEFT);
+		}
+		else
+		{
+			if (dy < 0)
+				this->move(DOWN);
+			else
+				this->move(UP);
+		}
 	}
 
 	float getX()
