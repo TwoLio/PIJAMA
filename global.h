@@ -77,5 +77,9 @@ enum obj_dir
 	SOUTH,
 	WEST,
 	EAST,
-	NORTH
+	NORTH,
+	SOUTH_WEST,
+	NORTH_WEST,
+	SOUTH_EAST,
+	NORTH_EAST
 };
