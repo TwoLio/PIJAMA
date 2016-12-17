@@ -20,22 +20,23 @@
 class GameObject
 {
 	public:
+	float health;
+	float speed;
+	float sight;
+
+	obj_state state;
+	obj_type type;
+	obj_dir direction;
+
+	float radius;
+	int sizeW;
+	int sizeH;
+
 	float x;
 	float y;
 
 	float spawnX;
 	float spawnY;
-
-	float speed;
-	float sight;
-	float radius;
-
-	int sizeW;
-	int sizeH;
-
-	obj_state state;
-	obj_type type;
-	obj_dir direction;
 
 	ALLEGRO_BITMAP	*texture = NULL;
 //	ALLEGRO_SAMPLE	*sound = NULL;
@@ -46,17 +47,13 @@ class GameObject
 	int rowFrame;
 	int colFrame;
 
-	GameObject(obj_state state, obj_type type,
-				int size,
-				float offsetX = 0.0f, float offsetY = 0.0f,
-				float sight = 0.0f, float speed = 2.5f)
+	GameObject(float health,
+				obj_state state, obj_type type,
+				float sight = 0.0f, float speed = 2.5f,
+				int size = 32,
+				float offsetX = 0.0f, float offsetY = 0.0f)
 	{
-		this->radius = size / 2;
-		this->sizeH = size;
-		this->sizeW = size;
-
-		this->x = this->spawnX = (SCREEN_WIDTH / 2 - this->sizeW / 2) + offsetX;
-		this->y = this->spawnY = (SCREEN_HEIGHT / 2 - this->sizeH / 2) + offsetY;
+		this->health = health;
 
 		this->state = state;
 		this->type = type;
@@ -64,6 +61,13 @@ class GameObject
 
 		this->sight = sight;
 		this->speed = speed;
+
+		this->radius = size / 2;
+		this->sizeH = size;
+		this->sizeW = size;
+
+		this->x = this->spawnX = (SCREEN_WIDTH / 2 - this->sizeW / 2) + offsetX;
+		this->y = this->spawnY = (SCREEN_HEIGHT / 2 - this->sizeH / 2) + offsetY;
 
 		this->setTexture("gfx/sheet/test_1.png");
 		this->textSourceX = size;

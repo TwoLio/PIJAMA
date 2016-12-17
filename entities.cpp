@@ -13,11 +13,12 @@
 class EnemyBot : public GameObject
 {
 	public:
-	EnemyBot(obj_state state = IDLE, obj_type type = ENEMY,
+	EnemyBot(float health,
+			obj_state state = IDLE, obj_type type = ENEMY,
+			float sight = 100.0f, float speed = 2.5f,
 			int size = 32,
-			float offsetX = 250.0f, float offsetY = 0.0f,
-			float sight = 100.0f, float speed = 2.5f)	:
-	GameObject(state, type, size, offsetX, offsetY, sight, speed)	{}
+			float offsetX = 250.0f, float offsetY = 0.0f)	:
+	GameObject(health, state, type, sight, speed, size, offsetX, offsetY)	{}
 
 	void render(int r = 255, int g = 0, int b = 0)
 	{
@@ -80,11 +81,12 @@ class EnemyBot : public GameObject
 class Bot : public GameObject
 {
 	public:
-	Bot(obj_state state = IDLE, obj_type type = FRIEND,
+	Bot(float health,
+		obj_state state = IDLE, obj_type type = FRIEND,
+		float sight = 100.0f, float speed = 2.5f,
 		int size = 32,
-		float offsetX = -250.0f, float offsetY = 20.0f,
-		float sight = 100.0f, float speed = 2.5f)	:
-	GameObject(state, type, size, offsetX, offsetY, sight, speed)	{}
+		float offsetX = -250.0f, float offsetY = 20.0f)	:
+	GameObject(health, state, type, sight, speed, size, offsetX, offsetY)	{}
 
 	void render(int r = 0, int g = 255, int b = 0)
 	{
@@ -147,11 +149,12 @@ class Bot : public GameObject
 class Player : public GameObject
 {
 	public:
-	Player(obj_state state = WALK, obj_type type = PLAYER,
+	Player(float health,
+			obj_state state = WALK, obj_type type = PLAYER,
+			float sight = 0.0f, float speed = 2.5f,
 			int size = 32,
-			float offsetX = -250.0f, float offsetY = -20.0f,
-			float sight = 0.0f, float speed = 2.5f)	:
-	GameObject(state, type, size, offsetX, offsetY, sight, speed)	{}
+			float offsetX = -250.0f, float offsetY = -20.0f)	:
+	GameObject(health, state, type, sight, speed, size, offsetX, offsetY)	{}
 
 	void render(int r = 0, int g = 0, int b = 255)
 	{
