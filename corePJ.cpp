@@ -17,14 +17,6 @@
 
 int main(int argc, char **argv)
 {
-	const float FPS = 30.0f;
-	float gameTime = 0.0f;
-	int frames = 0,	gameFPS = 0;
-	ALLEGRO_TIMER *timerFPS = NULL;
-
-	ALLEGRO_FONT *font = NULL;
-	ALLEGRO_SAMPLE *sample = NULL;
-
 	ALLEGRO_KEYBOARD_STATE keyState;
 //	ALLEGRO_MOUSE_STATE mouseState;
 
@@ -35,7 +27,7 @@ int main(int argc, char **argv)
 	if (!initAllegro())
 		return showMessageBox("Inizializzazione fallita a causa di un errore sconosciuto.", ALLEGRO_MESSAGEBOX_ERROR);
 
-	GameDisplay *gameDisplay = new GameDisplay();
+	GameDisplay *gameDisplay = new GameDisplay(30.0);
 
 	if (!gameDisplay->getDisplay())
 		return showMessageBox("Errore creazione display", ALLEGRO_MESSAGEBOX_ERROR);
@@ -43,25 +35,20 @@ int main(int argc, char **argv)
 	SCREEN_WIDTH = gameDisplay->getScreenWidth();
 	SCREEN_HEIGHT = gameDisplay->getScreenHeight();
 
-	Player		*p1 = new Player();			//WALK, PLAYER, 20, -250.f, -20.f, 0.f, 2.5f
-	Bot			*f_bot = new Bot();			//IDLE, FRIEND, 20, -250.f, 20.f, 200.f, 2.5f
-	EnemyBot	*e_bot = new EnemyBot();	//IDLE, ENEMY, 20, 250.f, 0.f, 200.f, 2.5f
+	Player		*p1 = new Player(100);
+	Bot			*f_bot = new Bot(100);
+	EnemyBot	*e_bot = new EnemyBot(100);
 
-	al_reserve_samples(1);
-	sample = al_load_sample("sfx/wood.mp3");
-	font = al_load_ttf_font("gfx/font/amsterdam.ttf", 36, 0);
-	timerFPS = al_create_timer(1.0f / FPS);
 	eventQueue = al_create_event_queue();
 
-	al_register_event_source(eventQueue, al_get_timer_event_source(timerFPS));
+	al_register_event_source(eventQueue, al_get_timer_event_source(gameDisplay->getTimerFPS()));
 	al_register_event_source(eventQueue, al_get_display_event_source(gameDisplay->getDisplay()));
 	al_register_event_source(eventQueue, al_get_mouse_event_source());
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
-	al_play_sample(sample, 1.0f, 0.0f, 1.0f, ALLEGRO_PLAYMODE_LOOP, NULL);
+	gameDisplay->startSound();
 
-	gameTime = al_current_time();
-	al_start_timer(timerFPS);
+	gameDisplay->startTimerFPS();
 
 	while(!exitGame)
 	{
@@ -99,13 +86,7 @@ int main(int argc, char **argv)
 		}
 		else if (event.type == ALLEGRO_EVENT_TIMER)
 		{
-			frames++;
-			if(al_current_time() - gameTime >= 1)
-			{
-				gameTime = al_current_time();
-				gameFPS = frames;
-				frames = 0;
-			}
+			gameDisplay->updateFPS();
 
 			al_get_keyboard_state(&keyState);
 			//al_get_mouse_state(&mouseState);
@@ -129,9 +110,6 @@ int main(int argc, char **argv)
 		{
 			render = false;
 
-			al_draw_textf(font, al_map_rgb(255, 255, 0), 10, 70,
-							ALLEGRO_ALIGN_LEFT, "%i", gameFPS);
-
 			p1->render();
 			f_bot->render();
 			e_bot->render();
@@ -148,8 +126,6 @@ int main(int argc, char **argv)
 	al_shutdown_native_dialog_addon();
 
 	al_destroy_event_queue(eventQueue);
-	al_destroy_sample(sample);
-	al_destroy_timer(timerFPS);
 
 	return 0;
 }
