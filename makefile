@@ -9,5 +9,6 @@ PiJama.o: PiJama.cpp global.h function.h bot.cpp display.cpp
 function.o: function.cpp function.h
 display.o: display.cpp
 
+.PHONY: clean
 clean:
 	rm *.o
