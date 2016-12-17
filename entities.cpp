@@ -13,27 +13,26 @@
 class EnemyBot : public GameObject
 {
 	public:
-	EnemyBot(float health,
+	EnemyBot(float health, ALLEGRO_FONT *font,
 			obj_state state = IDLE, obj_type type = ENEMY,
 			float sight = 100.0f, float speed = 2.5f,
 			int size = 32,
 			float offsetX = 250.0f, float offsetY = 0.0f)	:
-	GameObject(health, state, type, sight, speed, size, offsetX, offsetY)	{}
+	GameObject(health, font, state, type, sight, speed, size, offsetX, offsetY)	{}
 
 	void render(int r = 255, int g = 0, int b = 0)
 	{
 		al_draw_circle(this->spawnX, this->spawnY, this->sight,
-						al_map_rgba(255, 255, 255, 128), 1);
+					al_map_rgba(255, 255, 255, 128), 1);
 		al_draw_circle(this->x, this->y, this->sight,
-						al_map_rgba(r, g, b, 128), 1);
+					al_map_rgba(r, g, b, 128), 1);
 		al_draw_bitmap_region(this->texture,
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x - sizeW / 2, this->y - sizeH / 2,
-							NULL);
-/*		al_draw_filled_rectangle(this->x - 16, this->y - 16,
-								this->x + 16, this->y + 16,
-								al_map_rgb(r, g, b));*/
+							this->x - sizeW / 2, this->y - sizeH / 2,	0);
+		al_draw_textf(this->font, al_map_rgb(r, g, b),
+					this->x - sizeW / 2, this->y - sizeH / 2,
+					ALLEGRO_ALIGN_RIGHT, "%i", (int)health);
 	}
 
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
@@ -81,12 +80,12 @@ class EnemyBot : public GameObject
 class Bot : public GameObject
 {
 	public:
-	Bot(float health,
+	Bot(float health, ALLEGRO_FONT *font,
 		obj_state state = IDLE, obj_type type = FRIEND,
 		float sight = 100.0f, float speed = 2.5f,
 		int size = 32,
 		float offsetX = -250.0f, float offsetY = 20.0f)	:
-	GameObject(health, state, type, sight, speed, size, offsetX, offsetY)	{}
+	GameObject(health, font, state, type, sight, speed, size, offsetX, offsetY)	{}
 
 	void render(int r = 0, int g = 255, int b = 0)
 	{
@@ -97,11 +96,10 @@ class Bot : public GameObject
 		al_draw_bitmap_region(this->texture,
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x - sizeW / 2, this->y - sizeH / 2,
-							NULL);
-/*		al_draw_filled_rectangle(this->x - 16, this->y - 16,
-								this->x + 16, this->y + 16,
-								al_map_rgb(r, g, b));*/
+							this->x - sizeW / 2, this->y - sizeH / 2,	0);
+		al_draw_textf(this->font, al_map_rgb(r, g, b),
+					this->x - sizeW / 2, this->y - sizeH / 2,
+					ALLEGRO_ALIGN_RIGHT, "%i", (int)health);
 	}
 
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
@@ -149,23 +147,22 @@ class Bot : public GameObject
 class Player : public GameObject
 {
 	public:
-	Player(float health,
+	Player(float health, ALLEGRO_FONT *font,
 			obj_state state = WALK, obj_type type = PLAYER,
 			float sight = 0.0f, float speed = 2.5f,
 			int size = 32,
 			float offsetX = -250.0f, float offsetY = -20.0f)	:
-	GameObject(health, state, type, sight, speed, size, offsetX, offsetY)	{}
+	GameObject(health, font, state, type, sight, speed, size, offsetX, offsetY)	{}
 
 	void render(int r = 0, int g = 0, int b = 255)
 	{
-/*		al_draw_filled_rectangle(this->x - 16, this->y - 16,
-								this->x + 16, this->y + 16,
-								al_map_rgb(r, g, b));*/
 		al_draw_bitmap_region(this->texture,
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x - sizeW / 2, this->y - sizeH / 2,
-							NULL);
+							this->x - sizeW / 2, this->y - sizeH / 2,	0);
+		al_draw_textf(this->font, al_map_rgb(r, g, b),
+					this->x - sizeW / 2, this->y - sizeH / 2,
+					ALLEGRO_ALIGN_RIGHT, "%i", (int)health);
 	}
 
 	void update()

@@ -38,22 +38,24 @@ class GameObject
 	float spawnX;
 	float spawnY;
 
-	ALLEGRO_BITMAP	*texture = NULL;
-//	ALLEGRO_SAMPLE	*sound = NULL;
-//	ALLEGRO_TIMER	*timer = NULL;
+	ALLEGRO_BITMAP	*texture;
+	ALLEGRO_FONT	*font;
+//	ALLEGRO_SAMPLE	*sound;
+//	ALLEGRO_TIMER	*timer;
 
 	float textSourceX;		//Variables for sprite sheet animation
 	float textSourceY;
 	int rowFrame;
 	int colFrame;
 
-	GameObject(float health,
+	GameObject(float health, ALLEGRO_FONT *font,
 				obj_state state, obj_type type,
 				float sight = 0.0f, float speed = 2.5f,
 				int size = 32,
 				float offsetX = 0.0f, float offsetY = 0.0f)
 	{
 		this->health = health;
+		this->font = font;
 
 		this->state = state;
 		this->type = type;
