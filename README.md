@@ -10,6 +10,7 @@ Libraries:
 Sources:
 - Allegro 5 Official Page
 		https://www.allegro.cc/
+		https://wiki.allegro.cc/index.php?title=Allegro_5_API_Tutorials
 		http://liballeg.org/
 		http://liballeg.org/a5docs/5.2.0/
 - C++ Allegro 5 Tutorial by CodingMadeEasy
