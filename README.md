@@ -1,10 +1,11 @@
 # PIJAMA
 Project PIJAMA: Open Source 'cross-platform (WIP)' 2D/3D Game Engine for future open source videogames development.
+
+Compile with `make`. Use `make clean` to remove object files.
+
 Libraries:
 - Allegro
 - GLM
-
-Compile with `make`. Use `make clean` to remove object files.
 
 Sources:
 - Allegro 5 Official Page
