@@ -13,7 +13,7 @@
 
 #include "function.h"
 #include "display.cpp"
-#include "bot.cpp"
+#include "entities.cpp"
 
 int main(int argc, char **argv)
 {
