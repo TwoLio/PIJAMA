@@ -1,4 +1,4 @@
-# PiJam Engine (version A-0.04.9)
+# PiJam Engine (version A-0.05.1)
 Project PIJAMA: Open Source 'cross-platform (WIP)' 2D/3D Game Engine for future open source videogames development.
 
 Compile with `make`. Use `make clean` to remove object files.
