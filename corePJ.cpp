@@ -35,9 +35,9 @@ int main(int argc, char **argv)
 	SCREEN_WIDTH = gameDisplay->getScreenWidth();
 	SCREEN_HEIGHT = gameDisplay->getScreenHeight();
 
-	Player		*p1 = new Player(100);
-	Bot			*f_bot = new Bot(100);
-	EnemyBot	*e_bot = new EnemyBot(100);
+	Player		*p1 = new Player(100, gameDisplay->getFont(1));
+	Bot			*f_bot = new Bot(100, gameDisplay->getFont(1));
+	EnemyBot	*e_bot = new EnemyBot(100, gameDisplay->getFont(1));
 
 	eventQueue = al_create_event_queue();
 
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 	al_register_event_source(eventQueue, al_get_mouse_event_source());
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
-	gameDisplay->startSound();
+	gameDisplay->startSFX();
 
 	gameDisplay->startTimerFPS();
 
