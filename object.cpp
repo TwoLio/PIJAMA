@@ -48,7 +48,6 @@ class GameObject
 	float textSourceY;
 	int rowFrame;
 	int colFrame;
-	int colOffset;
 
 	GameObject(float health, ALLEGRO_FONT *font,
 				obj_state state, obj_type type,
@@ -117,7 +116,7 @@ class GameObject
 		return al_get_bitmap_height(this->texture);
 	}
 
-	void updateAnimation()
+	void updateAnimation()		// TODO	Add diagonal animations
 	{
 		if (this->state == WALK || this->state == CHASE || this->state == DEFEND)
 			this->textSourceX += this->sizeW;									//	this->getTextureWidth() / this->rowFrame
