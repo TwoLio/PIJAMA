@@ -88,3 +88,13 @@ enum obj_dir
 	SOUTH_EAST,
 	NORTH_EAST
 };
+
+enum anim_state
+{
+	ROW_COL,
+	CROSS,
+	ANIM_1,
+	ANIM_2,
+	ANIM_3
+	
+};

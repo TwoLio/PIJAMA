@@ -26,12 +26,12 @@ class EnemyBot : public GameObject
 					al_map_rgba(255, 255, 255, 128), 1);
 		al_draw_circle(this->x, this->y, this->sight,
 					al_map_rgba(r, g, b, 128), 1);
-		al_draw_bitmap_region(this->texture,
+		al_draw_bitmap_region(this->texture[this->animation],
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x - sizeW / 2, this->y - sizeH / 2,	0);
+							this->x - sizeW/2, this->y - sizeH/2, 0);
 		al_draw_textf(this->font, al_map_rgb(r, g, b),
-					this->x - sizeW / 2, this->y - sizeH / 2,
+					this->x - sizeW/2, this->y - sizeH/2,
 					ALLEGRO_ALIGN_RIGHT, "%i", (int)health);
 	}
 
@@ -56,7 +56,7 @@ class EnemyBot : public GameObject
 		}
 		else if (this->state == RETREAT)
 		{
-			if (5 >= this->getDistance(this->spawnX, this->spawnY))
+			if (4 >= this->getDistance(this->spawnX, this->spawnY))
 			{
 				this->x = this->spawnX;
 				this->y = this->spawnY;
@@ -94,12 +94,12 @@ class Bot : public GameObject
 						al_map_rgba(255, 255, 255, 128), 1);
 		al_draw_circle(this->x, this->y, this->sight,
 						al_map_rgba(r, g, b, 128), 1);
-		al_draw_bitmap_region(this->texture,
+		al_draw_bitmap_region(this->texture[this->animation],
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x - sizeW / 2, this->y - sizeH / 2,	0);
+							this->x - sizeW/2, this->y - sizeH/2, 0);
 		al_draw_textf(this->font, al_map_rgb(r, g, b),
-					this->x - sizeW / 2, this->y - sizeH / 2,
+					this->x - sizeW/2, this->y - sizeH/2,
 					ALLEGRO_ALIGN_RIGHT, "%i", (int)health);
 	}
 
@@ -156,12 +156,12 @@ class Player : public GameObject
 
 	void render(int r = 0, int g = 0, int b = 255)
 	{
-		al_draw_bitmap_region(this->texture,
+		al_draw_bitmap_region(this->texture[this->animation],
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x - sizeW / 2, this->y - sizeH / 2,	0);
+							this->x - sizeW/2, this->y - sizeH/2, 0);
 		al_draw_textf(this->font, al_map_rgb(r, g, b),
-					this->x - sizeW / 2, this->y - sizeH / 2,
+					this->x - sizeW/2, this->y - sizeH/2,
 					ALLEGRO_ALIGN_RIGHT, "%i", (int)health);
 	}
 
@@ -180,16 +180,19 @@ class Player : public GameObject
 			this->y -= this->speed;
 			this->direction = NORTH;
 			this->state = WALK;
+			this->animation = ROW_COL;
 
 			if (keys[LEFT])
 			{
 				this->x -= this->speed;
 				this->direction = NORTH_WEST;
+				this->animation = CROSS;
 			}
 			else if (keys[RIGHT])
 			{
 				this->x += this->speed;
 				this->direction = NORTH_EAST;
+				this->animation = CROSS;
 			}
 		}
 		else if (keys[DOWN])
@@ -197,16 +200,19 @@ class Player : public GameObject
 			this->y += this->speed;
 			this->direction = SOUTH;
 			this->state = WALK;
+			this->animation = ROW_COL;
 
 			if (keys[LEFT])
 			{
 				this->x -= this->speed;
 				this->direction = SOUTH_WEST;
+				this->animation = CROSS;
 			}
 			else if (keys[RIGHT])
 			{
 				this->x += this->speed;
 				this->direction = SOUTH_EAST;
+				this->animation = CROSS;
 			}
 		}
 		else if (keys[LEFT])
@@ -214,16 +220,19 @@ class Player : public GameObject
 			this->x -= this->speed;
 			this->direction = WEST;
 			this->state = WALK;
+			this->animation = ROW_COL;
 
 			if (keys[UP])
 			{
 				this->y -= this->speed;
 				this->direction = NORTH_WEST;
+				this->animation = CROSS;
 			}
 			else if (keys[DOWN])
 			{
 				this->y += this->speed;
 				this->direction = SOUTH_WEST;
+				this->animation = CROSS;
 			}
 		}
 		else if (keys[RIGHT])
@@ -231,21 +240,24 @@ class Player : public GameObject
 			this->x += this->speed;
 			this->direction = EAST;
 			this->state = WALK;
+			this->animation = ROW_COL;
 
 			if (keys[UP])
 			{
 				this->y -= this->speed;
 				this->direction = NORTH_EAST;
+				this->animation = CROSS;
 			}
 			else if (keys[DOWN])
 			{
 				this->y += this->speed;
 				this->direction = SOUTH_EAST;
+				this->animation = CROSS;
 			}
 		}
 	}
 
-	void input(int keyCode, bool keyFlag)
+	void input(int &keyCode, bool keyFlag)
 	{
 		switch (keyCode)
 		{

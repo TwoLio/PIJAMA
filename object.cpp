@@ -25,9 +25,10 @@ class GameObject
 	float speed;
 	float sight;
 
-	obj_state state;
-	obj_type type;
-	obj_dir direction;
+	obj_state	state;
+	obj_type	type;
+	obj_dir		direction;
+	anim_state	animation;
 
 	float radius;
 	int sizeW;
@@ -39,7 +40,7 @@ class GameObject
 	float spawnX;
 	float spawnY;
 
-	ALLEGRO_BITMAP	*texture;
+	ALLEGRO_BITMAP	*texture[2];
 	ALLEGRO_FONT	*font;
 //	ALLEGRO_SAMPLE	*sound;
 //	ALLEGRO_TIMER	*timer;
@@ -61,6 +62,7 @@ class GameObject
 		this->state = state;
 		this->type = type;
 		this->direction = SOUTH;
+		this->animation = ROW_COL;
 
 		this->sight = sight;
 		this->speed = speed;
@@ -69,19 +71,21 @@ class GameObject
 		this->sizeH = size;
 		this->sizeW = size;
 
-		this->x = this->spawnX = (SCREEN_WIDTH / 2 - this->sizeW / 2) + offsetX;
-		this->y = this->spawnY = (SCREEN_HEIGHT / 2 - this->sizeH / 2) + offsetY;
+		this->x = this->spawnX = (SCREEN_WIDTH/2 - this->sizeW/2) + offsetX;
+		this->y = this->spawnY = (SCREEN_HEIGHT/2 - this->sizeH/2) + offsetY;
 
-		this->setTexture("gfx/sheet/test_1.png");
+		this->setTexture("gfx/sheet/sprite1.png", 0);
+		this->setTexture("gfx/sheet/sprite2.png", 1);
 		this->textSourceX = size;
 		this->textSourceY = 0;
-		this->rowFrame = 12;
-		this->colFrame = 8;
+		this->rowFrame = 3;
+		this->colFrame = 4;
 	}
 
 	~GameObject()	
 	{
-		al_destroy_bitmap(texture);
+		for (int i = 0; i < 2; i++)
+			al_destroy_bitmap(texture[i]);
 		//al_destroy_timer(timer);
 		//al_destroy_sample(sound);
 	}
@@ -96,24 +100,24 @@ class GameObject
 		return al_load_bitmap(path);
 	}
 
-	void setTexture(const char *path)
+	void setTexture(const char *path, int n)
 	{
-		texture = loadBitmap(path);
+		texture[n] = loadBitmap(path);
 	}
 
-	ALLEGRO_BITMAP*	getTexture()
+	ALLEGRO_BITMAP*	getTexture(int i)
 	{
-		return texture;
+		return texture[i];
 	}
 
-	float getTextureWidth()
+	float getTextureWidth(int i)
 	{
-		return al_get_bitmap_width(this->texture);
+		return al_get_bitmap_width(this->texture[i]);
 	}
 
-	float getTextureHeight()
+	float getTextureHeight(int i)
 	{
-		return al_get_bitmap_height(this->texture);
+		return al_get_bitmap_height(this->texture[i]);
 	}
 
 	void updateAnimation()		// TODO	Add diagonal animations
@@ -126,43 +130,67 @@ class GameObject
 		if (this->textSourceX >= 3 * this->sizeW)
 			this->textSourceX = 0;
 
-		this->textSourceY = this->direction * this->sizeH;						//	this->getTextureHeight() / this->colFrame
+		this->textSourceY = (this->direction - 4*this->animation) * this->sizeH;						//	this->getTextureHeight() / this->colFrame
 	}
 
 	void follow(GameObject *obj)
 	{
 		float angle = this->getAngle(obj);
-		this->x += (2 * cos(angle));
-		this->y += (2 * sin(angle));
 		this->setDirection(angle);
+		this->x += ((this->speed-1.5) * cos(angle));
+		this->y += ((this->speed-1.5) * sin(angle));
 	}
 
 	void follow(float x, float y)
 	{
 		float angle = this->getAngle(x, y);
-		this->x += (2 * cos(angle));
-		this->y += (2 * sin(angle));
 		this->setDirection(angle);
+		this->x += ((this->speed-1.5) * cos(angle));
+		this->y += ((this->speed-1.5) * sin(angle));
 	}
 
 	void setDirection(float angle)
 	{
 		if (abs(angle) >= PI - OS_PI && abs(angle) <= PI)
+		{
 			this->direction = WEST;
+			this->animation = ROW_COL;
+		}
 		else if (angle > H_PI + OS_PI && angle < PI - OS_PI)
+		{
 			this->direction = SOUTH_WEST;
+			this->animation = CROSS;
+		}
 		else if (angle >= H_PI - OS_PI && angle <= H_PI + OS_PI)
+		{
 			this->direction = SOUTH;
+			this->animation = ROW_COL;
+		}
 		else if (angle > OS_PI && angle < H_PI - OS_PI)
+		{
 			this->direction = SOUTH_EAST;
+			this->animation = CROSS;
+		}
 		else if (angle >= -OS_PI && angle <= OS_PI)
+		{
 			this->direction = EAST;
+			this->animation = ROW_COL;
+		}
 		else if (angle > -H_PI + OS_PI && angle < -OS_PI)
+		{
 			this->direction = NORTH_EAST;
+			this->animation = CROSS;
+		}
 		else if (angle >= -H_PI - OS_PI && angle <= -H_PI + OS_PI)
+		{
 			this->direction = NORTH;
+			this->animation = ROW_COL;
+		}
 		else if (angle > -PI + OS_PI && angle < -H_PI - OS_PI)
+		{
 			this->direction = NORTH_WEST;
+			this->animation = CROSS;
+		}
 	}
 
 	float getAngle(float x, float y)
