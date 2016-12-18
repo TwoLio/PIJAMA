@@ -7,10 +7,12 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_native_dialog.h>
 
+
+// TODO Fix icon
+
 class GameDisplay
 {
 	protected:
-	//ALLEGRO_BITMAP		*icon;
 	ALLEGRO_DISPLAY 		*display;
 	ALLEGRO_DISPLAY_MODE	displayMode;
 	int						numDisplayModes;
@@ -21,12 +23,14 @@ class GameDisplay
 
 	ALLEGRO_FONT			*font[2];
 	ALLEGRO_SAMPLE			*sound;
+	ALLEGRO_BITMAP			*icon;
 
 	public:
 	GameDisplay(const float FPS)
 	{
 		al_reserve_samples(1);
-		sound = al_load_sample("sfx/wood.mp3");
+		sound = al_load_sample("sfx/relax.wav");
+		icon = al_load_bitmap("gfx/sheet/sun32.png");
 
 		font[0] = al_load_ttf_font("gfx/font/amsterdam.ttf", 36, 0);
 		font[1] = al_load_ttf_font("gfx/font/amsterdam.ttf", 15, 0);
@@ -43,8 +47,8 @@ class GameDisplay
 		al_get_display_mode(0, &displayMode);									//Risoluzione minima 'al_get_num_display_modes() - 1' /Risoluzione massima '0'
 		display = al_create_display(displayMode.width, displayMode.height);
 
-		al_set_window_title(display, "PIJAMA");
-		//al_set_display_icon(display, icon);
+		al_set_display_icon(display, icon);
+		al_set_window_title(display, "PiJam Engine (version A)");
 		al_hide_mouse_cursor(display);
 	}
 
@@ -53,6 +57,7 @@ class GameDisplay
 		al_show_mouse_cursor(display);
 		al_destroy_font(font[0]);
 		al_destroy_font(font[1]);
+		al_destroy_bitmap(icon);
 		al_destroy_sample(sound);
 		al_destroy_timer(timerFPS);
 		al_destroy_display(display);
