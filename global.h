@@ -1,10 +1,15 @@
 #pragma once
+#include <allegro5/allegro.h>
+
+const float PI = ALLEGRO_PI;
+const float H_PI = ALLEGRO_PI/2.;
+const float OS_PI = ALLEGRO_PI/8.;
+
+const int MAX_KEYS = 60;
 
 int	SCREEN_WIDTH = 0, SCREEN_HEIGHT = 0;
 
 bool exitGame = false;
-
-const int MAX_KEYS = 60;
 
 bool keys[MAX_KEYS] = {	false, false, false, false, false,
 						false, false, false, false, false,

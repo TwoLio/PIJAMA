@@ -75,6 +75,7 @@ class EnemyBot : public GameObject
 	}
 
 	void input()	{}
+	void move()		{}
 };
 
 class Bot : public GameObject
@@ -106,9 +107,7 @@ class Bot : public GameObject
 	{
 		if (this->state == IDLE)
 		{
-			if (this->sight > this->getDistance(target))
-				this->state = ATTACK;
-			else if (this->sight > this->getDistance(obj))
+			if (this->sight > this->getDistance(obj))
 				this->state = DEFEND;
 		}
 		else if (this->state == ATTACK)
@@ -142,6 +141,7 @@ class Bot : public GameObject
 	}
 
 	void input()	{}
+	void move()		{}
 };
 
 class Player : public GameObject
@@ -167,25 +167,87 @@ class Player : public GameObject
 
 	void update()
 	{
-		this->state = WALK;
-
-		if (keys[UP] && this->y >= 5.0)
-			this->move(UP);
-		else if (keys[DOWN] && this->y <= SCREEN_HEIGHT - this->sizeH - 5.0)
-			this->move(DOWN);
-		else if (keys[LEFT] && this->x >= 5.0)
-			this->move(LEFT);
-		else if (keys[RIGHT] && this->x <= SCREEN_WIDTH - this->sizeW - 5.0)
-			this->move(RIGHT);
-		else
-			this->state = IDLE;
-
+		this->move();
 		this->updateAnimation();
 	}
 
-	void input(int &keycode, bool keyFlag)
+	void move()
 	{
-		switch (keycode)
+		this->state = IDLE;
+
+		if (keys[UP])
+		{
+			this->y -= this->speed;
+			this->direction = NORTH;
+			this->state = WALK;
+
+			if (keys[LEFT])
+			{
+				this->x -= this->speed;
+				this->direction = NORTH_WEST;
+			}
+			else if (keys[RIGHT])
+			{
+				this->x += this->speed;
+				this->direction = NORTH_EAST;
+			}
+		}
+		else if (keys[DOWN])
+		{
+			this->y += this->speed;
+			this->direction = SOUTH;
+			this->state = WALK;
+
+			if (keys[LEFT])
+			{
+				this->x -= this->speed;
+				this->direction = SOUTH_WEST;
+			}
+			else if (keys[RIGHT])
+			{
+				this->x += this->speed;
+				this->direction = SOUTH_EAST;
+			}
+		}
+		else if (keys[LEFT])
+		{
+			this->x -= this->speed;
+			this->direction = WEST;
+			this->state = WALK;
+
+			if (keys[UP])
+			{
+				this->y -= this->speed;
+				this->direction = NORTH_WEST;
+			}
+			else if (keys[DOWN])
+			{
+				this->y += this->speed;
+				this->direction = SOUTH_WEST;
+			}
+		}
+		else if (keys[RIGHT])
+		{
+			this->x += this->speed;
+			this->direction = EAST;
+			this->state = WALK;
+
+			if (keys[UP])
+			{
+				this->y -= this->speed;
+				this->direction = NORTH_EAST;
+			}
+			else if (keys[DOWN])
+			{
+				this->y += this->speed;
+				this->direction = SOUTH_EAST;
+			}
+		}
+	}
+
+	void input(int keyCode, bool keyFlag)
+	{
+		switch (keyCode)
 		{
 		case ALLEGRO_KEY_UP:
 			keys[UP] = keyFlag;

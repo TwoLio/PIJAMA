@@ -17,8 +17,8 @@
 
 int main(int argc, char **argv)
 {
-	ALLEGRO_KEYBOARD_STATE keyState;
-//	ALLEGRO_MOUSE_STATE mouseState;
+	ALLEGRO_KEYBOARD_STATE	keyState;
+	ALLEGRO_MOUSE_STATE		mouseState;
 
 	ALLEGRO_EVENT_QUEUE *eventQueue = NULL;
 
@@ -89,7 +89,7 @@ int main(int argc, char **argv)
 			gameDisplay->updateFPS();
 
 			al_get_keyboard_state(&keyState);
-			//al_get_mouse_state(&mouseState);
+			al_get_mouse_state(&mouseState);
 
 			if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE))
 				exitGame = true;

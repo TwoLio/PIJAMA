@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_ttf.h>
@@ -47,6 +48,7 @@ class GameObject
 	float textSourceY;
 	int rowFrame;
 	int colFrame;
+	int colOffset;
 
 	GameObject(float health, ALLEGRO_FONT *font,
 				obj_state state, obj_type type,
@@ -88,6 +90,7 @@ class GameObject
 	virtual void input()	{}
 	virtual void update(GameObject *target = NULL, GameObject *obj = NULL)	{}
 	virtual void render(int r = 0, int g = 0, int b = 0)	{}
+	virtual void move()	{}
 
 	ALLEGRO_BITMAP* loadBitmap(const char *path)
 	{
@@ -117,44 +120,22 @@ class GameObject
 	void updateAnimation()
 	{
 		if (this->state == WALK || this->state == CHASE || this->state == DEFEND)
-			this->textSourceX += this->getTextureWidth() / this->rowFrame;
+			this->textSourceX += this->sizeW;									//	this->getTextureWidth() / this->rowFrame
 		else if (this->state == IDLE)
 			this->textSourceX = this->sizeW;
 
-		if (this->textSourceX >= this->sizeW * 3)
+		if (this->textSourceX >= 3 * this->sizeW)
 			this->textSourceX = 0;
 
-		this->textSourceY = this->direction * (this->getTextureHeight() / this->colFrame);
+		this->textSourceY = this->direction * this->sizeH;						//	this->getTextureHeight() / this->colFrame
 	}
 
-	void move(int dir)
-	{
-		switch (dir)
-		{
-		case UP:
-			this->y -= this->speed;
-			this->direction = NORTH;
-			break;
-		case DOWN:
-			this->y += this->speed;
-			this->direction = SOUTH;
-			break;
-		case LEFT:
-			this->x -= this->speed;
-			this->direction = WEST;
-			break;
-		case RIGHT:
-			this->x += this->speed;
-			this->direction = EAST;
-			break;
-		};
-	}
-
-	/*void follow(GameObject *obj)
+	void follow(GameObject *obj)
 	{
 		float angle = this->getAngle(obj);
 		this->x += (2 * cos(angle));
 		this->y += (2 * sin(angle));
+		this->setDirection(angle);
 	}
 
 	void follow(float x, float y)
@@ -162,48 +143,41 @@ class GameObject
 		float angle = this->getAngle(x, y);
 		this->x += (2 * cos(angle));
 		this->y += (2 * sin(angle));
-	}*/
-
-	void follow(GameObject *obj)
-	{
-		float dx = this->x - obj->x;
-		float dy = this->y - obj->y;
-
-		if (abs(dx) > abs(dy))
-		{
-			if (dx < 0)
-				this->move(RIGHT);
-			else
-				this->move(LEFT);
-		}
-		else
-		{
-			if (dy < 0)
-				this->move(DOWN);
-			else
-				this->move(UP);
-		}
+		this->setDirection(angle);
 	}
 
-	void follow(float x, float y)
+	void setDirection(float angle)
 	{
-		float dx = this->x - x;
-		float dy = this->y - y;
+		if (abs(angle) >= PI - OS_PI && abs(angle) <= PI)
+			this->direction = WEST;
+		else if (angle > H_PI + OS_PI && angle < PI - OS_PI)
+			this->direction = SOUTH_WEST;
+		else if (angle >= H_PI - OS_PI && angle <= H_PI + OS_PI)
+			this->direction = SOUTH;
+		else if (angle > OS_PI && angle < H_PI - OS_PI)
+			this->direction = SOUTH_EAST;
+		else if (angle >= -OS_PI && angle <= OS_PI)
+			this->direction = EAST;
+		else if (angle > -H_PI + OS_PI && angle < -OS_PI)
+			this->direction = NORTH_EAST;
+		else if (angle >= -H_PI - OS_PI && angle <= -H_PI + OS_PI)
+			this->direction = NORTH;
+		else if (angle > -PI + OS_PI && angle < -H_PI - OS_PI)
+			this->direction = NORTH_WEST;
+	}
 
-		if (abs(dx) > abs(dy))
-		{
-			if (dx < 0)
-				this->move(RIGHT);
-			else
-				this->move(LEFT);
-		}
-		else
-		{
-			if (dy < 0)
-				this->move(DOWN);
-			else
-				this->move(UP);
-		}
+	float getAngle(float x, float y)
+	{
+		float dx = x - this->x;
+		float dy = y - this->y;
+		return atan2(dy, dx);
+	}
+
+	float getAngle(GameObject *obj)
+	{
+		float dx = obj->x - this->x;
+		float dy = obj->y - this->y;
+		return atan2(dy, dx);
 	}
 
 	float getX()
@@ -321,20 +295,6 @@ class GameObject
 	float getDistance(GameObject *obj)
 	{
 		return sqrt(pow(obj->x - this->x, 2) + pow(obj->y - this->y, 2));
-	}
-
-	float getAngle(float x, float y)
-	{
-		float dx = x - this->x;
-		float dy = y - this->y;
-		return atan2(dy, dx);
-	}
-
-	float getAngle(GameObject *obj)
-	{
-		float dx = obj->x - this->x;
-		float dy = obj->y - this->y;
-		return atan2(dy, dx);
 	}
 
 	bool getCollisionDB(GameObject *obj)	//Distance Based Collision
