@@ -15,7 +15,7 @@ class EnemyBot : public GameObject
 	public:
 	EnemyBot(float health, ALLEGRO_FONT *font,
 			obj_state state = IDLE, obj_type type = ENEMY,
-			float sight = 100.0f, float speed = 2.5f,
+			float sight = 100.0f, float speed = 1.f,
 			int size = 32,
 			float offsetX = 250.0f, float offsetY = 0.0f)	:
 	GameObject(health, font, state, type, sight, speed, size, offsetX, offsetY)	{}
@@ -70,8 +70,6 @@ class EnemyBot : public GameObject
 					this->state = CHASE;
 			}
 		}
-
-		this->updateAnimation();
 	}
 
 	void input()	{}
@@ -83,7 +81,7 @@ class Bot : public GameObject
 	public:
 	Bot(float health, ALLEGRO_FONT *font,
 		obj_state state = IDLE, obj_type type = FRIEND,
-		float sight = 100.0f, float speed = 2.5f,
+		float sight = 100.0f, float speed = 1.f,
 		int size = 32,
 		float offsetX = -250.0f, float offsetY = 20.0f)	:
 	GameObject(health, font, state, type, sight, speed, size, offsetX, offsetY)	{}
@@ -136,8 +134,6 @@ class Bot : public GameObject
 					this->state = ATTACK;
 			}
 		}
-
-		this->updateAnimation();
 	}
 
 	void input()	{}
@@ -149,7 +145,7 @@ class Player : public GameObject
 	public:
 	Player(float health, ALLEGRO_FONT *font,
 			obj_state state = WALK, obj_type type = PLAYER,
-			float sight = 0.0f, float speed = 2.5f,
+			float sight = 0.0f, float speed = 1.f,
 			int size = 32,
 			float offsetX = -250.0f, float offsetY = -20.0f)	:
 	GameObject(health, font, state, type, sight, speed, size, offsetX, offsetY)	{}
@@ -168,7 +164,6 @@ class Player : public GameObject
 	void update()
 	{
 		this->move();
-		this->updateAnimation();
 	}
 
 	void move()
@@ -177,84 +172,49 @@ class Player : public GameObject
 
 		if (keys[UP])
 		{
-			this->y -= this->speed;
-			this->direction = NORTH;
 			this->state = WALK;
-			this->animation = ROW_COL;
 
 			if (keys[LEFT])
-			{
-				this->x -= this->speed;
-				this->direction = NORTH_WEST;
-				this->animation = CROSS;
-			}
+				this->follow(this->x - this->speed, this->y - this->speed);
 			else if (keys[RIGHT])
-			{
-				this->x += this->speed;
-				this->direction = NORTH_EAST;
-				this->animation = CROSS;
-			}
+				this->follow(this->x + this->speed, this->y - this->speed);
+			else
+				this->follow(this->x, this->y - this->speed);
 		}
 		else if (keys[DOWN])
 		{
-			this->y += this->speed;
-			this->direction = SOUTH;
 			this->state = WALK;
-			this->animation = ROW_COL;
 
 			if (keys[LEFT])
-			{
-				this->x -= this->speed;
-				this->direction = SOUTH_WEST;
-				this->animation = CROSS;
-			}
+				this->follow(this->x - this->speed, this->y + this->speed);
 			else if (keys[RIGHT])
-			{
-				this->x += this->speed;
-				this->direction = SOUTH_EAST;
-				this->animation = CROSS;
-			}
+				this->follow(this->x + this->speed, this->y + this->speed);
+			else
+				this->follow(this->x, this->y + this->speed);
 		}
 		else if (keys[LEFT])
 		{
-			this->x -= this->speed;
-			this->direction = WEST;
 			this->state = WALK;
-			this->animation = ROW_COL;
 
 			if (keys[UP])
-			{
-				this->y -= this->speed;
-				this->direction = NORTH_WEST;
-				this->animation = CROSS;
-			}
+				this->follow(this->x - this->speed, this->y - this->speed);
 			else if (keys[DOWN])
-			{
-				this->y += this->speed;
-				this->direction = SOUTH_WEST;
-				this->animation = CROSS;
-			}
+				this->follow(this->x - this->speed, this->y + this->speed);
+			else
+				this->follow(this->x - this->speed, this->y);
 		}
 		else if (keys[RIGHT])
 		{
-			this->x += this->speed;
-			this->direction = EAST;
 			this->state = WALK;
-			this->animation = ROW_COL;
 
 			if (keys[UP])
-			{
-				this->y -= this->speed;
-				this->direction = NORTH_EAST;
-				this->animation = CROSS;
-			}
+				this->follow(this->x + this->speed, this->y - this->speed);
 			else if (keys[DOWN])
-			{
-				this->y += this->speed;
-				this->direction = SOUTH_EAST;
-				this->animation = CROSS;
-			}
+				this->follow(this->x + this->speed, this->y + this->speed);
+			else
+				this->follow(this->x + this->speed, this->y);
 		}
+
 	}
 
 	void input(int &keyCode, bool keyFlag)

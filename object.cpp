@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <sstream>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_ttf.h>
@@ -21,38 +22,38 @@
 class GameObject
 {
 	public:
-	float health;
-	float speed;
-	float sight;
+	float	health;
+	float	speed;
+	float	sight;
 
 	obj_state	state;
 	obj_type	type;
 	obj_dir		direction;
 	anim_state	animation;
 
-	float radius;
-	int sizeW;
-	int sizeH;
+	float	radius;
+	int		sizeW;
+	int		sizeH;
 
-	float x;
-	float y;
+	float	x;
+	float	y;
 
-	float spawnX;
-	float spawnY;
+	float	spawnX;
+	float	spawnY;
 
-	ALLEGRO_BITMAP	*texture[2];
+	ALLEGRO_BITMAP	*texture[OBJ_TEXTURES];
 	ALLEGRO_FONT	*font;
 //	ALLEGRO_SAMPLE	*sound;
 //	ALLEGRO_TIMER	*timer;
 
-	float textSourceX;		//Variables for sprite sheet animation
-	float textSourceY;
-	int rowFrame;
-	int colFrame;
+	float			textSourceX;		//Variables for sprite sheet animation
+	float			textSourceY;
+	int				rowFrame;
+	int				colFrame;
 
 	GameObject(float health, ALLEGRO_FONT *font,
 				obj_state state, obj_type type,
-				float sight = 0.0f, float speed = 2.5f,
+				float sight = 0.0f, float speed = 1.f,
 				int size = 32,
 				float offsetX = 0.0f, float offsetY = 0.0f)
 	{
@@ -74,8 +75,7 @@ class GameObject
 		this->x = this->spawnX = (SCREEN_WIDTH/2 - this->sizeW/2) + offsetX;
 		this->y = this->spawnY = (SCREEN_HEIGHT/2 - this->sizeH/2) + offsetY;
 
-		this->setTexture("gfx/sheet/sprite1.png", 0);
-		this->setTexture("gfx/sheet/sprite2.png", 1);
+		this->setTexture("gfx/sheet/");
 		this->textSourceX = size;
 		this->textSourceY = 0;
 		this->rowFrame = 3;
@@ -84,7 +84,7 @@ class GameObject
 
 	~GameObject()	
 	{
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < OBJ_TEXTURES; i++)
 			al_destroy_bitmap(texture[i]);
 		//al_destroy_timer(timer);
 		//al_destroy_sample(sound);
@@ -100,9 +100,14 @@ class GameObject
 		return al_load_bitmap(path);
 	}
 
-	void setTexture(const char *path, int n)
+	void setTexture(const char *path)
 	{
-		texture[n] = loadBitmap(path);
+		for (int i = 0; i < OBJ_TEXTURES; i++)
+		{
+			std::stringstream str;
+			str << path << "sprite" << i << ".png";
+			texture[i] = loadBitmap(str.str().c_str());
+		}
 	}
 
 	ALLEGRO_BITMAP*	getTexture(int i)
@@ -120,33 +125,33 @@ class GameObject
 		return al_get_bitmap_height(this->texture[i]);
 	}
 
-	void updateAnimation()		// TODO	Add diagonal animations
+	void updateAnimation()
 	{
 		if (this->state == WALK || this->state == CHASE || this->state == DEFEND)
-			this->textSourceX += this->sizeW;									//	this->getTextureWidth() / this->rowFrame
+			this->textSourceX += this->sizeW;
 		else if (this->state == IDLE)
 			this->textSourceX = this->sizeW;
 
 		if (this->textSourceX >= 3 * this->sizeW)
 			this->textSourceX = 0;
 
-		this->textSourceY = (this->direction - 4*this->animation) * this->sizeH;						//	this->getTextureHeight() / this->colFrame
+		this->textSourceY = (this->direction - 4*this->animation) * this->sizeH;
 	}
 
 	void follow(GameObject *obj)
 	{
 		float angle = this->getAngle(obj);
 		this->setDirection(angle);
-		this->x += ((this->speed-1.5) * cos(angle));
-		this->y += ((this->speed-1.5) * sin(angle));
+		this->x += this->speed * cos(angle);
+		this->y += this->speed * sin(angle);
 	}
 
 	void follow(float x, float y)
 	{
 		float angle = this->getAngle(x, y);
 		this->setDirection(angle);
-		this->x += ((this->speed-1.5) * cos(angle));
-		this->y += ((this->speed-1.5) * sin(angle));
+		this->x += this->speed * cos(angle);
+		this->y += this->speed * sin(angle);
 	}
 
 	void setDirection(float angle)

@@ -6,6 +6,8 @@ const float H_PI = ALLEGRO_PI/2.;
 const float OS_PI = ALLEGRO_PI/8.;
 
 const int MAX_KEYS = 60;
+const int OBJ_TEXTURES = 2;
+const int DSP_FONTS = 2;
 
 int	SCREEN_WIDTH = 0, SCREEN_HEIGHT = 0;
 
