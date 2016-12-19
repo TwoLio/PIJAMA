@@ -18,7 +18,7 @@
 int main(int argc, char **argv)
 {
 	ALLEGRO_KEYBOARD_STATE	keyState;
-	ALLEGRO_MOUSE_STATE		mouseState;
+	//ALLEGRO_MOUSE_STATE		mouseState;
 
 	ALLEGRO_EVENT_QUEUE *eventQueue = NULL;
 
@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 	if (!initAllegro())
 		return showMessageBox("Inizializzazione fallita a causa di un errore sconosciuto.", ALLEGRO_MESSAGEBOX_ERROR);
 
-	GameDisplay *gameDisplay = new GameDisplay(30.0);
+	GameDisplay *gameDisplay = new GameDisplay();
 
 	if (!gameDisplay->getDisplay())
 		return showMessageBox("Errore creazione display", ALLEGRO_MESSAGEBOX_ERROR);
@@ -42,12 +42,14 @@ int main(int argc, char **argv)
 	eventQueue = al_create_event_queue();
 
 	al_register_event_source(eventQueue, al_get_timer_event_source(gameDisplay->getTimerFPS()));
+	al_register_event_source(eventQueue, al_get_timer_event_source(gameDisplay->getTimerAnimation()));
 	al_register_event_source(eventQueue, al_get_display_event_source(gameDisplay->getDisplay()));
 	al_register_event_source(eventQueue, al_get_mouse_event_source());
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
 	gameDisplay->startSFX();
 
+	gameDisplay->startTimerAnimation();
 	gameDisplay->startTimerFPS();
 
 	while(!exitGame)
@@ -86,22 +88,31 @@ int main(int argc, char **argv)
 		}
 		else if (event.type == ALLEGRO_EVENT_TIMER)
 		{
-			gameDisplay->updateFPS();
+			if (event.timer.source == gameDisplay->getTimerFPS())
+			{
+				gameDisplay->updateFPS();
 
-			al_get_keyboard_state(&keyState);
-			al_get_mouse_state(&mouseState);
+				al_get_keyboard_state(&keyState);
+				//al_get_mouse_state(&mouseState);
 
-			if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE))
-				exitGame = true;
+				if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE))
+					exitGame = true;
 
-			p1->update();
+				p1->update();
 
-			f_bot->update(e_bot, p1);
+				f_bot->update(e_bot, p1);
 
-			if (e_bot->getDistance(p1) < e_bot->getDistance(f_bot))
-				e_bot->update(p1);
-			else
-				e_bot->update(f_bot);
+				if (e_bot->getDistance(p1) < e_bot->getDistance(f_bot))
+					e_bot->update(p1);
+				else
+					e_bot->update(f_bot);
+			}
+			else if (event.timer.source == gameDisplay->getTimerAnimation())
+			{
+				p1->updateAnimation();
+				f_bot->updateAnimation();
+				e_bot->updateAnimation();
+			}
 
 			render = true;
 		}
