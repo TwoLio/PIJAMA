@@ -22,24 +22,24 @@
 class GameObject
 {
 	public:
-	float	health;
-	float	speed;
-	float	sight;
+	float			health;
+	float			speed;
+	float			sight;
 
-	obj_state	state;
-	obj_type	type;
-	obj_dir		direction;
-	anim_state	animation;
+	obj_state		state;
+	obj_type		type;
+	obj_dir			direction;
+	anim_state		animation;
 
-	float	radius;
-	int		sizeW;
-	int		sizeH;
+	float			radius;
+	int				sizeW;
+	int				sizeH;
 
-	float	x;
-	float	y;
+	float			x;
+	float			y;
 
-	float	spawnX;
-	float	spawnY;
+	float			spawnX;
+	float			spawnY;
 
 	ALLEGRO_BITMAP	*texture[OBJ_TEXTURES];
 	ALLEGRO_FONT	*font;
@@ -106,13 +106,13 @@ class GameObject
 		{
 			std::stringstream str;
 			str << path << "sprite" << i << ".png";
-			texture[i] = loadBitmap(str.str().c_str());
+			this->texture[i] = loadBitmap(str.str().c_str());
 		}
 	}
 
 	ALLEGRO_BITMAP*	getTexture(int i)
 	{
-		return texture[i];
+		return this->texture[i];
 	}
 
 	float getTextureWidth(int i)
@@ -214,7 +214,7 @@ class GameObject
 
 	float getX()
 	{
-		return x;
+		return this->x;
 	}
 	void setX(float x)	
 	{
@@ -223,7 +223,7 @@ class GameObject
 
 	float getY()
 	{
-		return y;
+		return this->y;
 	}
 	void setY(float y)
 	{
@@ -238,7 +238,7 @@ class GameObject
 
 	float getSpawnX()
 	{
-		return spawnX;
+		return this->spawnX;
 	}
 	void setSpawnX(float spawnX)
 	{
@@ -247,7 +247,7 @@ class GameObject
 
 	float getSpawnY()
 	{
-		return spawnY;
+		return this->spawnY;
 	}
 	void setSpawnY(float spawnY)
 	{
@@ -262,7 +262,7 @@ class GameObject
 
 	float getSightDistance()
 	{
-		return sight;
+		return this->sight;
 	}
 	void setSightDistance(float sight)
 	{
@@ -271,7 +271,7 @@ class GameObject
 
 	int getWidthSize()
 	{
-		return sizeW;
+		return this->sizeW;
 	}
 
 	void setWidthSize(int sizeW)
@@ -281,7 +281,7 @@ class GameObject
 
 	int getHeightSize()
 	{
-		return sizeW;
+		return this->sizeW;
 	}
 
 	void setHeightSize(int sizeH)
@@ -291,7 +291,7 @@ class GameObject
 
 	float getSpeed()
 	{
-		return speed;
+		return this->speed;
 	}
 
 	void setSpeed(float speed)
@@ -301,7 +301,7 @@ class GameObject
 
 	float getRadius()
 	{
-		return radius;
+		return this->radius;
 	}
 
 	void setRadius(float radius)
@@ -311,7 +311,7 @@ class GameObject
 
 	obj_state getState()
 	{
-		return state;
+		return this->state;
 	}
 
 	void setState(obj_state state)

@@ -33,14 +33,13 @@ void changeState(int &state, int newState)
 
 ALLEGRO_BITMAP*	createBitmap(ALLEGRO_BITMAP *texture[], int n)
 {
-	ALLEGRO_BITMAP *bmp = al_create_bitmap(al_get_bitmap_width(texture[0]),
-											al_get_bitmap_height(texture[0]));
+	ALLEGRO_BITMAP *bmp = al_create_bitmap(al_get_bitmap_width(texture[0]), al_get_bitmap_height(texture[0]));
 	al_set_target_bitmap(bmp);
 
 	for (int i = 0; i < n; i++)
 		al_draw_bitmap(texture[i], 0, 0, 0);
-	al_save_bitmap("gfx/bmp/bitmap.png", bmp);
 
+	al_save_bitmap("gfx/bmp/bitmap.png", bmp);
 	al_set_target_bitmap(al_get_backbuffer(al_get_current_display()));
 
 	return bmp;

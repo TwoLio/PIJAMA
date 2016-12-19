@@ -29,10 +29,10 @@ class EnemyBot : public GameObject
 		al_draw_bitmap_region(this->texture[this->animation],
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x - sizeW/2, this->y - sizeH/2, 0);
+							this->x - this->sizeW/2, this->y - this->sizeH/2, 0);
 		al_draw_textf(this->font, al_map_rgb(r, g, b),
-					this->x - sizeW/2, this->y - sizeH/2,
-					ALLEGRO_ALIGN_RIGHT, "%i", (int)health);
+					this->x - this->sizeW/2, this->y - this->sizeH/2,
+					ALLEGRO_ALIGN_RIGHT, "%i", (int)this->health);
 	}
 
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
@@ -89,16 +89,16 @@ class Bot : public GameObject
 	void render(int r = 0, int g = 255, int b = 0)
 	{
 		al_draw_circle(this->spawnX, this->spawnY, this->sight,
-						al_map_rgba(255, 255, 255, 128), 1);
+					al_map_rgba(255, 255, 255, 128), 1);
 		al_draw_circle(this->x, this->y, this->sight,
-						al_map_rgba(r, g, b, 128), 1);
+					al_map_rgba(r, g, b, 128), 1);
 		al_draw_bitmap_region(this->texture[this->animation],
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x - sizeW/2, this->y - sizeH/2, 0);
+							this->x - this->sizeW/2, this->y - this->sizeH/2, 0);
 		al_draw_textf(this->font, al_map_rgb(r, g, b),
-					this->x - sizeW/2, this->y - sizeH/2,
-					ALLEGRO_ALIGN_RIGHT, "%i", (int)health);
+					this->x - this->sizeW/2, this->y - this->sizeH/2,
+					ALLEGRO_ALIGN_RIGHT, "%i", (int)this->health);
 	}
 
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
@@ -155,10 +155,10 @@ class Player : public GameObject
 		al_draw_bitmap_region(this->texture[this->animation],
 							this->textSourceX, this->textSourceY,
 							this->sizeW, this->sizeH,
-							this->x - sizeW/2, this->y - sizeH/2, 0);
+							this->x - this->sizeW/2, this->y - this->sizeH/2, 0);
 		al_draw_textf(this->font, al_map_rgb(r, g, b),
-					this->x - sizeW/2, this->y - sizeH/2,
-					ALLEGRO_ALIGN_RIGHT, "%i", (int)health);
+					this->x - this->sizeW/2, this->y - this->sizeH/2,
+					ALLEGRO_ALIGN_RIGHT, "%i", (int)this->health);
 	}
 
 	void update()

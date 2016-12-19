@@ -18,9 +18,8 @@
 int main(int argc, char **argv)
 {
 	ALLEGRO_KEYBOARD_STATE	keyState;
-	//ALLEGRO_MOUSE_STATE		mouseState;
-
-	ALLEGRO_EVENT_QUEUE *eventQueue = NULL;
+//	ALLEGRO_MOUSE_STATE		mouseState;
+	ALLEGRO_EVENT_QUEUE		*eventQueue = NULL;
 
 	bool render = true;
 
@@ -28,7 +27,6 @@ int main(int argc, char **argv)
 		return showMessageBox("Inizializzazione fallita a causa di un errore sconosciuto.", ALLEGRO_MESSAGEBOX_ERROR);
 
 	GameDisplay *gameDisplay = new GameDisplay();
-
 	if (!gameDisplay->getDisplay())
 		return showMessageBox("Errore creazione display", ALLEGRO_MESSAGEBOX_ERROR);
 
@@ -40,7 +38,6 @@ int main(int argc, char **argv)
 	EnemyBot	*e_bot = new EnemyBot(100, gameDisplay->getFont(1));
 
 	eventQueue = al_create_event_queue();
-
 	al_register_event_source(eventQueue, al_get_timer_event_source(gameDisplay->getTimerFPS()));
 	al_register_event_source(eventQueue, al_get_timer_event_source(gameDisplay->getTimerAnimation()));
 	al_register_event_source(eventQueue, al_get_display_event_source(gameDisplay->getDisplay()));
@@ -48,7 +45,6 @@ int main(int argc, char **argv)
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
 	gameDisplay->startSFX();
-
 	gameDisplay->startTimerAnimation();
 	gameDisplay->startTimerFPS();
 
@@ -92,14 +88,12 @@ int main(int argc, char **argv)
 			{
 				gameDisplay->updateFPS();
 
-				al_get_keyboard_state(&keyState);
 				//al_get_mouse_state(&mouseState);
-
+				al_get_keyboard_state(&keyState);
 				if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE))
 					exitGame = true;
 
 				p1->update();
-
 				f_bot->update(e_bot, p1);
 
 				if (e_bot->getDistance(p1) < e_bot->getDistance(f_bot))
@@ -133,9 +127,7 @@ int main(int argc, char **argv)
 	delete f_bot;
 	delete p1;
 	delete gameDisplay;
-
 	al_shutdown_native_dialog_addon();
-
 	al_destroy_event_queue(eventQueue);
 
 	return 0;
