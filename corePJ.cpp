@@ -1,5 +1,5 @@
-#include <cstdlib>
-#include <iostream>
+//#include <cstdlib>
+//#include <iostream>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_ttf.h>
@@ -11,14 +11,12 @@
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_opengl.h>
 
-#include "function.h"
+#include "functions.h"
 #include "display.cpp"
 #include "entities.cpp"
 
 int main(int argc, char **argv)
 {
-	ALLEGRO_KEYBOARD_STATE	keyState;
-//	ALLEGRO_MOUSE_STATE		mouseState;
 	ALLEGRO_EVENT_QUEUE		*eventQueue = NULL;
 
 	bool render = true;
@@ -29,9 +27,6 @@ int main(int argc, char **argv)
 	GameDisplay *gameDisplay = new GameDisplay();
 	if (!gameDisplay->getDisplay())
 		return showMessageBox("Errore creazione display", ALLEGRO_MESSAGEBOX_ERROR);
-
-	SCREEN_WIDTH = gameDisplay->getScreenWidth();
-	SCREEN_HEIGHT = gameDisplay->getScreenHeight();
 
 	Player		*p1 = new Player(100, gameDisplay->getFont(1));
 	Bot			*f_bot = new Bot(100, gameDisplay->getFont(1));
@@ -88,9 +83,7 @@ int main(int argc, char **argv)
 			{
 				gameDisplay->updateFPS();
 
-				//al_get_mouse_state(&mouseState);
-				al_get_keyboard_state(&keyState);
-				if (al_key_down(&keyState, ALLEGRO_KEY_ESCAPE))
+				if (p1->getGameInput()->keyDown(ALLEGRO_KEY_ESCAPE))
 					exitGame = true;
 
 				p1->update();
