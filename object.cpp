@@ -17,10 +17,13 @@
 //#include <glm/mat4x4.hpp> // glm::mat4
 //#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 
-#include "global.h"
+#include "globals.h"
 
 class GameObject
 {
+	protected:
+	static const int OBJ_TEXTURES = 2;
+
 	public:
 	float			health;
 	float			speed;
@@ -46,15 +49,15 @@ class GameObject
 //	ALLEGRO_SAMPLE	*sound;
 //	ALLEGRO_TIMER	*timer;
 
-	float			textSourceX;		//Variables for sprite sheet animation
+	float			textSourceX;		//Variables for spritesheet animation
 	float			textSourceY;
 	int				rowFrame;
 	int				colFrame;
 
 	GameObject(float health, ALLEGRO_FONT *font,
 				obj_state state, obj_type type,
+				obj_dir direction, int size = 32,
 				float sight = 0.0f, float speed = 1.f,
-				int size = 32,
 				float offsetX = 0.0f, float offsetY = 0.0f)
 	{
 		this->health = health;
@@ -62,7 +65,7 @@ class GameObject
 
 		this->state = state;
 		this->type = type;
-		this->direction = SOUTH;
+		this->direction = direction;
 		this->animation = ROW_COL;
 
 		this->sight = sight;
@@ -72,8 +75,8 @@ class GameObject
 		this->sizeH = size;
 		this->sizeW = size;
 
-		this->x = this->spawnX = (SCREEN_WIDTH/2 - this->sizeW/2) + offsetX;
-		this->y = this->spawnY = (SCREEN_HEIGHT/2 - this->sizeH/2) + offsetY;
+		this->x = this->spawnX = (al_get_display_width(DISPLAY)/2 - this->sizeW/2) + offsetX;
+		this->y = this->spawnY = (al_get_display_height(DISPLAY)/2 - this->sizeH/2) + offsetY;
 
 		this->setTexture("gfx/sheet/");
 		this->textSourceX = size;
@@ -100,13 +103,13 @@ class GameObject
 		return al_load_bitmap(path);
 	}
 
-	void setTexture(const char *path)
+	void setTexture(const char *folder)
 	{
 		for (int i = 0; i < OBJ_TEXTURES; i++)
 		{
-			std::stringstream str;
-			str << path << "sprite" << i << ".png";
-			this->texture[i] = loadBitmap(str.str().c_str());
+			std::stringstream path;
+			path << folder << "sprite" << i << ".png";
+			this->texture[i] = loadBitmap(path.str().c_str());
 		}
 	}
 
@@ -127,7 +130,7 @@ class GameObject
 
 	void updateAnimation()
 	{
-		if (this->state == WALK || this->state == CHASE || this->state == DEFEND)
+		if (this->state == CHASE || this->state == WALK)
 			this->textSourceX += this->sizeW;
 		else if (this->state == IDLE)
 			this->textSourceX = this->sizeW;
@@ -339,35 +342,33 @@ class GameObject
 
 	bool getCollisionBB(GameObject *obj)	//Bounding Box Collision
 	{
-		if ((this->x > obj->x + obj->sizeW) || (this->y > obj->y + obj->sizeH) ||
-			(obj->x > this->x + this->sizeW) || (obj->y > this->y + this->sizeH))
+		if (this->x > obj->x + obj->sizeW || this->y > obj->y + obj->sizeH ||
+			obj->x > this->x + this->sizeW || obj->y > this->y + this->sizeH)
 			return false;
 
 		return true;
 	}
 
-	bool getCollisionPP(ALLEGRO_BITMAP *texture, ALLEGRO_BITMAP *objTexture, GameObject *obj)	//Pixel Perfect Collision
+	bool getCollisionPP(GameObject *obj)	//Pixel Perfect Collision
 	{
 		int ppBoxTop, ppBoxBottom, ppBoxLeft, ppBoxRight;
 
 		if (!getCollisionBB(obj))
 			return false;
-		else
-		{
-			ppBoxTop = std::max(this->y, obj->y);
-			ppBoxBottom = std::min(this->y + this->sizeH, obj->y + obj->sizeH);
-			ppBoxLeft = std::max(this->x, obj->x);
-			ppBoxRight = std::min(this->x + this->sizeW, obj->x + obj->sizeW);
-		}
+
+		ppBoxTop = std::max(this->y, obj->y);
+		ppBoxBottom = std::min(this->y + this->sizeH, obj->y + obj->sizeH);
+		ppBoxLeft = std::max(this->x, obj->x);
+		ppBoxRight = std::min(this->x + this->sizeW, obj->x + obj->sizeW);
 
 		for (int i = ppBoxTop; i < ppBoxBottom; i++)
 		{
 			for (int j = ppBoxLeft; j < ppBoxRight; j++)
 			{
-				al_lock_bitmap(texture, al_get_bitmap_format(texture), ALLEGRO_LOCK_READONLY);
-				al_lock_bitmap(objTexture, al_get_bitmap_format(objTexture), ALLEGRO_LOCK_READONLY);
-				ALLEGRO_COLOR color1 = al_get_pixel(texture, j - this->x, i - this->y);
-				ALLEGRO_COLOR color2 = al_get_pixel(objTexture, j - obj->x, i - obj->y);
+				al_lock_bitmap(this->texture[this->animation], al_get_bitmap_format(this->texture[this->animation]), ALLEGRO_LOCK_READONLY);
+				al_lock_bitmap(obj->texture[obj->animation], al_get_bitmap_format(obj->texture[obj->animation]), ALLEGRO_LOCK_READONLY);
+				ALLEGRO_COLOR color1 = al_get_pixel(this->texture[this->animation], j - this->x, i - this->y);
+				ALLEGRO_COLOR color2 = al_get_pixel(obj->texture[obj->animation], j - obj->x, i - obj->y);
 
 				if (color1.a != 0 && color2.a != 0)
 					return true;
