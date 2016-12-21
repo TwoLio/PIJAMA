@@ -12,6 +12,8 @@
 class GameDisplay
 {
 	protected:
+	static const int		DSP_FONTS = 2;
+	static const int		DSP_SOUNDS = 3;
 	static const float		FPS = 60.;
 
 	ALLEGRO_DISPLAY 		*display;
@@ -23,11 +25,11 @@ class GameDisplay
 	int						frames,	gameFPS;
 
 	ALLEGRO_TIMER			*timerAnim;
-	float					animFPS;
+	float					animFPS;		//	Increments for running animation, decrements for walking animation
 
-	ALLEGRO_FONT			*font[2];
-	ALLEGRO_SAMPLE			*sound[3];
-	ALLEGRO_SAMPLE_INSTANCE	*soundInstance[3];
+	ALLEGRO_FONT			*font[DSP_FONTS];
+	ALLEGRO_SAMPLE			*sound[DSP_SOUNDS];
+	ALLEGRO_SAMPLE_INSTANCE	*soundInstance[DSP_SOUNDS];
 //	ALLEGRO_BITMAP			*icon;
 
 	public:
@@ -40,27 +42,26 @@ class GameDisplay
 		al_get_display_mode(0, &displayMode);									//Risoluzione minima 'al_get_num_display_modes() - 1' /Risoluzione massima '0'
 		this->display = al_create_display(this->displayMode.width, this->displayMode.height);
 
+		//this->icon = al_load_bitmap("gfx/bmp/sun32.png");
 		//al_set_display_icon(this->display, this->icon);
 		al_set_window_title(this->display, "PiJam Engine (version A)");
 
-		al_reserve_samples(3);
+		al_reserve_samples(DSP_SOUNDS);
 		this->sound[0] = al_load_sample("sfx/relax.wav");
 		this->sound[1] = al_load_sample("sfx/frogs.wav");
 		this->sound[2] = al_load_sample("sfx/sea.flac");
 
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < DSP_SOUNDS; i++)
 		{
 			this->soundInstance[i] = al_create_sample_instance(this->sound[i]);
 			al_set_sample_instance_playmode(this->soundInstance[i], ALLEGRO_PLAYMODE_LOOP);
 			al_attach_sample_instance_to_mixer(this->soundInstance[i], al_get_default_mixer());
 		}
 
-		//icon = al_load_bitmap("gfx/sheet/sun32.png");
-
 		this->font[0] = al_load_ttf_font("gfx/font/amsterdam.ttf", 36, 0);
 		this->font[1] = al_load_ttf_font("gfx/font/amsterdam.ttf", 15, 0);
 
-		this->animFPS = 10.;
+		this->animFPS = 8.;
 		this->timerAnim = al_create_timer(1.0 / this->animFPS);
 
 		this->timerFPS = al_create_timer(1.0f / this->FPS);
@@ -74,9 +75,9 @@ class GameDisplay
 	~GameDisplay()
 	{
 		al_show_mouse_cursor(this->display);
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < DSP_FONTS; i++)
 			al_destroy_font(this->font[i]);
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < DSP_SOUNDS; i++)
 		{
 			al_destroy_sample_instance(this->soundInstance[i]);
 			al_destroy_sample(this->sound[i]);
@@ -110,6 +111,7 @@ class GameDisplay
 	{
 		al_play_sample_instance(this->soundInstance[0]);
 //		al_play_sample_instance(this->soundInstance[1]);
+//		al_play_sample_instance(this->soundInstance[2]);
 //		al_play_sample(this->sound[0], 1.0f, 0.0f, 1.0f, ALLEGRO_PLAYMODE_LOOP, NULL);
 	}
 
