@@ -8,6 +8,8 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_native_dialog.h>
 
+#define DISPLAY	al_get_current_display()
+
 bool initAllegro()
 {
 	if (!al_init())
@@ -31,7 +33,7 @@ void changeState(int &state, int newState)
 	state = newState;
 }
 
-ALLEGRO_BITMAP*	createBitmap(ALLEGRO_BITMAP *texture[], int n)
+ALLEGRO_BITMAP*	createBitmapFromLayers(ALLEGRO_BITMAP *texture[], int n)
 {
 	ALLEGRO_BITMAP *bmp = al_create_bitmap(al_get_bitmap_width(texture[0]), al_get_bitmap_height(texture[0]));
 	al_set_target_bitmap(bmp);
@@ -40,7 +42,7 @@ ALLEGRO_BITMAP*	createBitmap(ALLEGRO_BITMAP *texture[], int n)
 		al_draw_bitmap(texture[i], 0, 0, 0);
 
 	al_save_bitmap("gfx/bmp/bitmap.png", bmp);
-	al_set_target_bitmap(al_get_backbuffer(al_get_current_display()));
+	al_set_target_bitmap(al_get_backbuffer(DISPLAY));
 
 	return bmp;
 }
@@ -51,7 +53,7 @@ int showMessageBox(const char *text, int flag, const char *button = NULL)
 	{
 	case ALLEGRO_MESSAGEBOX_WARN:
 		std::cerr << text << std::endl;
-		return al_show_native_message_box(al_get_current_display(),
+		return al_show_native_message_box(DISPLAY,
 										"Attenzione",
 										"Potrebbe esserci un problema!",
 										text,
@@ -59,7 +61,7 @@ int showMessageBox(const char *text, int flag, const char *button = NULL)
 										ALLEGRO_MESSAGEBOX_WARN);
 	case ALLEGRO_MESSAGEBOX_ERROR:
 		std::cerr << text << std::endl;
-		return al_show_native_message_box(al_get_current_display(),
+		return al_show_native_message_box(DISPLAY,
 										"Errore Allegro 5",
 										"Errore inizializzazione!",
 										text,
@@ -67,7 +69,7 @@ int showMessageBox(const char *text, int flag, const char *button = NULL)
 										ALLEGRO_MESSAGEBOX_ERROR);
 	case ALLEGRO_MESSAGEBOX_QUESTION:
 		std::cerr << text << std::endl;
-		return al_show_native_message_box(al_get_current_display(),
+		return al_show_native_message_box(DISPLAY,
 										"Domanda",
 										"Scegliere come procedere.",
 										text,
@@ -76,7 +78,7 @@ int showMessageBox(const char *text, int flag, const char *button = NULL)
 
 	case ALLEGRO_MESSAGEBOX_OK_CANCEL:
 		std::cerr << text << std::endl;
-		return al_show_native_message_box(al_get_current_display(),
+		return al_show_native_message_box(DISPLAY,
 										"Ok / Cancella",
 										"Cosa vuoi fare?",
 										text,
@@ -84,7 +86,7 @@ int showMessageBox(const char *text, int flag, const char *button = NULL)
 										ALLEGRO_MESSAGEBOX_OK_CANCEL);
 	case ALLEGRO_MESSAGEBOX_YES_NO:
 		std::cerr << text << std::endl;
-		return al_show_native_message_box(al_get_current_display(),
+		return al_show_native_message_box(DISPLAY,
 										"Si / No",
 										"Scelta.",
 										text,
@@ -92,7 +94,7 @@ int showMessageBox(const char *text, int flag, const char *button = NULL)
 										ALLEGRO_MESSAGEBOX_YES_NO);
 	default:
 		std::cerr << text << std::endl;
-		return al_show_native_message_box(al_get_current_display(),
+		return al_show_native_message_box(DISPLAY,
 										"Errore",
 										"Errore del programma",
 										text,
