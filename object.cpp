@@ -52,7 +52,7 @@ class GameObject
 	float			textSourceX;		//Variables for spritesheet animation
 	float			textSourceY;
 	int				rowFrame;
-	int				colFrame;
+	int				columnFrame;
 
 	GameObject(float health, ALLEGRO_FONT *font,
 				obj_state state, obj_type type,
@@ -82,7 +82,7 @@ class GameObject
 		this->textSourceX = size;
 		this->textSourceY = 0;
 		this->rowFrame = 3;
-		this->colFrame = 4;
+		this->columnFrame = 4;
 	}
 
 	~GameObject()	
@@ -94,9 +94,9 @@ class GameObject
 	}
 
 	virtual void input()	{}
-	virtual void update(GameObject *target = NULL, GameObject *obj = NULL)	{}
-	virtual void render(int r = 0, int g = 0, int b = 0)	{}
-	virtual void move()	{}
+	virtual void update()	{}
+	virtual void render()	{}
+	virtual void move()		{}
 
 	ALLEGRO_BITMAP* loadBitmap(const char *path)
 	{
@@ -145,8 +145,30 @@ class GameObject
 	{
 		float angle = this->getAngle(obj);
 		this->setDirection(angle);
-		this->x += this->speed * cos(angle);
-		this->y += this->speed * sin(angle);
+
+		float dir;
+		if (this->getCollisionPP(obj))
+			dir = -5.*(this->speed);
+		else
+			dir = this->speed;
+
+		this->x += dir * cos(angle);		//	Negative speed value make the object move backward
+		this->y += dir * sin(angle);
+	}
+
+	void follow(float x, float y, GameObject *obj)
+	{
+		float angle = this->getAngle(x, y);
+		this->setDirection(angle);
+
+		float dir;
+		if (this->getCollisionPP(obj))
+			dir = -5.*(this->speed);
+		else
+			dir = this->speed;
+
+		this->x += dir * cos(angle);		//	Negative speed value make the object move backward
+		this->y += dir * sin(angle);
 	}
 
 	void follow(float x, float y)
@@ -332,14 +354,6 @@ class GameObject
 		return sqrt(pow(obj->x - this->x, 2) + pow(obj->y - this->y, 2));
 	}
 
-	bool getCollisionDB(GameObject *obj)	//Distance Based Collision
-	{
-		if (sqrt(pow(this->x - obj->x, 2) + pow(this->y - obj->y, 2)) < this->radius + obj->radius)
-			return true;
-
-		return false;
-	}
-
 	bool getCollisionBB(GameObject *obj)	//Bounding Box Collision
 	{
 		if (this->x > obj->x + obj->sizeW || this->y > obj->y + obj->sizeH ||
@@ -347,6 +361,14 @@ class GameObject
 			return false;
 
 		return true;
+	}
+
+	bool getCollisionDB(GameObject *obj)	//Distance Based Collision
+	{
+		if (sqrt(pow(this->x - obj->x, 2) + pow(this->y - obj->y, 2)) < this->radius + obj->radius)
+			return true;
+
+		return false;
 	}
 
 	bool getCollisionPP(GameObject *obj)	//Pixel Perfect Collision

@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 				if (p1->getGameInput()->keyDown(ALLEGRO_KEY_ESCAPE))
 					exitGame = true;
 
-				p1->update();
+				p1->update(f_bot);
 				f_bot->update(e_bot, p1);
 
 				if (e_bot->getDistance(p1) < e_bot->getDistance(f_bot))

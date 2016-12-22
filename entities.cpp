@@ -83,7 +83,7 @@ class Bot : public GameObject
 		obj_state state = IDLE, obj_type type = FRIEND,
 		obj_dir direction = EAST, int size = 32,
 		float sight = 100.0f, float speed = 1.f,
-		float offsetX = -250.0f, float offsetY = 20.0f)	:
+		float offsetX = -250.0f, float offsetY = 32.0f)	:
 	GameObject(health, font, state, type, direction, size, sight, speed, offsetX, offsetY)	{}
 
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
@@ -150,7 +150,7 @@ class Player : public GameObject
 			obj_state state = WALK, obj_type type = PLAYER,
 			obj_dir direction = EAST, int size = 32,
 			float sight = 0.0f, float speed = 1.f,
-			float offsetX = -250.0f, float offsetY = -20.0f)	:
+			float offsetX = -250.0f, float offsetY = -32.0f)	:
 	GameObject(health, font, state, type, direction, size, sight, speed, offsetX, offsetY)
 	{
 		this->gameInput = new GameInput();
@@ -171,11 +171,11 @@ class Player : public GameObject
 		this->getGameInput()->setKey(keyCode, keyFlag);
 	}
 
-	void update()
+	void update(GameObject *obj)
 	{
 		this->getGameInput()->getKeyState();
 		this->getGameInput()->getMouseState();
-		this->move();
+		this->move(obj);
 	}
 
 	void render(int r = 0, int g = 0, int b = 255)
@@ -189,7 +189,7 @@ class Player : public GameObject
 					ALLEGRO_ALIGN_RIGHT, "%i", (int)this->health);
 	}
 
-	void move()
+	void move(GameObject *obj)
 	{
 		this->state = IDLE;
 
@@ -198,44 +198,44 @@ class Player : public GameObject
 			this->state = WALK;
 
 			if (this->getGameInput()->getKey(ALLEGRO_KEY_LEFT))
-				this->follow(this->x - this->speed, this->y - this->speed);
+				this->follow(this->x - this->speed, this->y - this->speed, obj);
 			else if (this->getGameInput()->getKey(ALLEGRO_KEY_RIGHT))
-				this->follow(this->x + this->speed, this->y - this->speed);
+				this->follow(this->x + this->speed, this->y - this->speed, obj);
 			else
-				this->follow(this->x, this->y - this->speed);
+				this->follow(this->x, this->y - this->speed, obj);
 		}
 		else if (this->getGameInput()->getKey(ALLEGRO_KEY_DOWN))
 		{
 			this->state = WALK;
 
 			if (this->getGameInput()->getKey(ALLEGRO_KEY_LEFT))
-				this->follow(this->x - this->speed, this->y + this->speed);
+				this->follow(this->x - this->speed, this->y + this->speed, obj);
 			else if (this->getGameInput()->getKey(ALLEGRO_KEY_RIGHT))
-				this->follow(this->x + this->speed, this->y + this->speed);
+				this->follow(this->x + this->speed, this->y + this->speed, obj);
 			else
-				this->follow(this->x, this->y + this->speed);
+				this->follow(this->x, this->y + this->speed, obj);
 		}
 		else if (this->getGameInput()->getKey(ALLEGRO_KEY_LEFT))
 		{
 			this->state = WALK;
 
 			if (this->getGameInput()->getKey(ALLEGRO_KEY_UP))
-				this->follow(this->x - this->speed, this->y - this->speed);
+				this->follow(this->x - this->speed, this->y - this->speed, obj);
 			else if (this->getGameInput()->getKey(ALLEGRO_KEY_DOWN))
-				this->follow(this->x - this->speed, this->y + this->speed);
+				this->follow(this->x - this->speed, this->y + this->speed, obj);
 			else
-				this->follow(this->x - this->speed, this->y);
+				this->follow(this->x - this->speed, this->y, obj);
 		}
 		else if (this->getGameInput()->getKey(ALLEGRO_KEY_RIGHT))
 		{
 			this->state = WALK;
 
 			if (this->getGameInput()->getKey(ALLEGRO_KEY_UP))
-				this->follow(this->x + this->speed, this->y - this->speed);
+				this->follow(this->x + this->speed, this->y - this->speed, obj);
 			else if (this->getGameInput()->getKey(ALLEGRO_KEY_DOWN))
-				this->follow(this->x + this->speed, this->y + this->speed);
+				this->follow(this->x + this->speed, this->y + this->speed, obj);
 			else
-				this->follow(this->x + this->speed, this->y);
+				this->follow(this->x + this->speed, this->y, obj);
 		}
 
 	}
