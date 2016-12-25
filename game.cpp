@@ -114,7 +114,7 @@ class Game
 			{
 				//p1->setX(event.mouse.x);
 				//p1->setY(event.mouse.y);
-				gameDisplay->setScale(event.mouse.dz/10.);
+				//gameDisplay->setScale(event.mouse.dz/10.);
 			}
 			else if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 			{
