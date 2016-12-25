@@ -7,6 +7,8 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_native_dialog.h>
 
+#include "entities.cpp"
+
 // TODO Fix icon
 
 class GameDisplay
@@ -31,6 +33,11 @@ class GameDisplay
 	ALLEGRO_SAMPLE			*sound[DSP_SOUNDS];
 	ALLEGRO_SAMPLE_INSTANCE	*soundInstance[DSP_SOUNDS];
 //	ALLEGRO_BITMAP			*icon;
+
+	ALLEGRO_TRANSFORM		camera;
+	int						cameraX;
+	int						cameraY;
+	float					scale;
 
 	public:
 	GameDisplay()
@@ -69,6 +76,8 @@ class GameDisplay
 		this->frames = 0;
 		this->gameFPS = 0;
 
+		this->scale = 1.0f;
+
 		al_hide_mouse_cursor(this->display);
 	}
 
@@ -91,9 +100,43 @@ class GameDisplay
 
 	void draw()
 	{
-		al_draw_textf(this->font[0], al_map_rgb(255, 255, 0), 10, 70, ALLEGRO_ALIGN_LEFT, "%i", this->gameFPS);
+		al_draw_textf(this->font[0], al_map_rgb(255, 255, 0), this->cameraX + 10, this->cameraY + 10, ALLEGRO_ALIGN_LEFT, "%i", this->gameFPS);
 		al_flip_display();
 		al_clear_to_color(al_map_rgb(0, 0, 0));
+	}
+
+	void updateCamera(float x, float y, float sizeW, float sizeH)
+	{
+		this->cameraX = -(getScreenWidth()/2) + (x + sizeW/2);
+		this->cameraY = -(getScreenHeight()/2) + (y + sizeH/2);
+
+		if (this->cameraX < 0)
+			this->cameraX = 0;
+		if (this->cameraY < 0)
+			this->cameraY = 0;
+
+		al_identity_transform(&camera);
+		al_translate_transform(&camera, -(obj->x - obj->sizeW/2.), -(obj->y));
+		al_scale_transform(&camera, this->scale, this->scale);
+		al_translate_transform(&camera, -this->cameraX + (obj->x + obj->sizeW/2.), -this->cameraY + (obj->y + obj->sizeH/2.));
+		al_use_transform(&camera);
+	}
+
+	void updateCamera(GameObject *obj)
+	{
+		this->cameraX = -(getScreenWidth()/2) + (obj->getX() + obj->getWidthSize()/2);
+		this->cameraY = -(getScreenHeight()/2) + (obj->getY() + obj->getHeightSize()/2);
+
+		if (this->cameraX < 0)
+			this->cameraX = 0;
+		if (this->cameraY < 0)
+			this->cameraY = 0;
+
+		al_identity_transform(&camera);
+		al_translate_transform(&camera, -(obj->x - obj->sizeW/2.), -(obj->y));
+		al_scale_transform(&camera, this->scale, this->scale);
+		al_translate_transform(&camera, -this->cameraX + (obj->x + obj->sizeW/2.), -this->cameraY + (obj->y + obj->sizeH/2.));
+		al_use_transform(&camera);
 	}
 
 	void updateFPS()
@@ -144,6 +187,31 @@ class GameDisplay
 	ALLEGRO_FONT* getFont(int i)
 	{
 		return this->font[i];
+	}
+
+	int getCameraX()
+	{
+		return this->cameraX;
+	}
+
+	int getCameraY()
+	{
+		return this->cameraY;
+	}
+
+	float getScale()
+	{
+		return this->scale;
+	}
+
+	void setScale()
+	{
+		this->scale = 1.0f;
+	}
+
+	void setScale(float offset)
+	{
+		this->scale += offset;
 	}
 
 	int getScreenWidth()
