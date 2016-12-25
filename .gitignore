@@ -29,5 +29,4 @@
 *.app
 
 # Media
-*.wav
-*.flac
+*.mp3
