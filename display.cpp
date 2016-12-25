@@ -116,9 +116,9 @@ class GameDisplay
 			this->cameraY = 0;
 
 		al_identity_transform(&camera);
-		al_translate_transform(&camera, -(obj->x - obj->sizeW/2.), -(obj->y));
+		al_translate_transform(&camera, -(x - sizeW/2), -y);
 		al_scale_transform(&camera, this->scale, this->scale);
-		al_translate_transform(&camera, -this->cameraX + (obj->x + obj->sizeW/2.), -this->cameraY + (obj->y + obj->sizeH/2.));
+		al_translate_transform(&camera, -this->cameraX + (x+sizeW/2), -this->cameraY + (y+sizeH/2));
 		al_use_transform(&camera);
 	}
 
@@ -133,9 +133,9 @@ class GameDisplay
 			this->cameraY = 0;
 
 		al_identity_transform(&camera);
-		al_translate_transform(&camera, -(obj->x - obj->sizeW/2.), -(obj->y));
+		al_translate_transform(&camera, -(obj->x - obj->sizeW/2), -(obj->y));
 		al_scale_transform(&camera, this->scale, this->scale);
-		al_translate_transform(&camera, -this->cameraX + (obj->x + obj->sizeW/2.), -this->cameraY + (obj->y + obj->sizeH/2.));
+		al_translate_transform(&camera, -this->cameraX + (obj->x + obj->sizeW/2), -this->cameraY + (obj->y + obj->sizeH/2));
 		al_use_transform(&camera);
 	}
 
