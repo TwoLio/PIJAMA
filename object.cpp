@@ -17,6 +17,7 @@
 //#include <glm/mat4x4.hpp> // glm::mat4
 //#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 
+
 #include "globals.h"
 
 class GameObject
@@ -54,14 +55,13 @@ class GameObject
 	int				rowFrame;
 	int				columnFrame;
 
-	GameObject(float health, ALLEGRO_FONT *font,
+	GameObject(float x, float y, float health,
 				obj_state state, obj_type type,
 				obj_dir direction, int size = 32,
-				float sight = 0.0f, float speed = 1.f,
-				float offsetX = 0.0f, float offsetY = 0.0f)
+				float sight = 0.0f, float speed = 1.f)
 	{
 		this->health = health;
-		this->font = font;
+		this->font = NULL;
 
 		this->state = state;
 		this->type = type;
@@ -71,12 +71,11 @@ class GameObject
 		this->sight = sight;
 		this->speed = speed;
 
-		this->radius = size / 2;
-		this->sizeH = size;
-		this->sizeW = size;
+		this->radius = size/2.;
+		this->sizeH = this->sizeW = size;
 
-		this->x = this->spawnX = (al_get_display_width(DISPLAY)/2 - this->sizeW/2) + offsetX;
-		this->y = this->spawnY = (al_get_display_height(DISPLAY)/2 - this->sizeH/2) + offsetY;
+		this->x = this->spawnX = x;
+		this->y = this->spawnY = y;
 
 		this->setTexture("gfx/sheet/");
 		this->textSourceX = size;
@@ -152,7 +151,7 @@ class GameObject
 		else
 			dir = this->speed;
 
-		this->x += dir * cos(angle);		//	Negative speed value make the object move backward
+		this->x += dir * cos(angle);
 		this->y += dir * sin(angle);
 	}
 
@@ -167,7 +166,7 @@ class GameObject
 		else
 			dir = this->speed;
 
-		this->x += dir * cos(angle);		//	Negative speed value make the object move backward
+		this->x += dir * cos(angle);
 		this->y += dir * sin(angle);
 	}
 
@@ -235,6 +234,16 @@ class GameObject
 		float dx = obj->x - this->x;
 		float dy = obj->y - this->y;
 		return atan2(dy, dx);
+	}
+
+	ALLEGRO_FONT* getFont()
+	{
+		return this->font;
+	}
+
+	void setFont(ALLEGRO_FONT *font)
+	{
+		this->font = font;
 	}
 
 	float getX()

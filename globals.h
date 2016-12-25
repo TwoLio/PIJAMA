@@ -5,9 +5,7 @@
 
 const float PI = ALLEGRO_PI;
 const float H_PI = ALLEGRO_PI/2.;
-const float OS_PI = ALLEGRO_PI/8.;
-
-bool exitGame = false;
+const float OS_PI = ALLEGRO_PI/8.;		//	Offset
 
 enum game_states
 {

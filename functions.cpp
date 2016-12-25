@@ -1,4 +1,3 @@
-#include <iostream>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_font.h>
@@ -52,54 +51,17 @@ int showMessageBox(const char *text, int flag, const char *button = NULL)
 	switch (flag)
 	{
 	case ALLEGRO_MESSAGEBOX_WARN:
-		std::cerr << text << std::endl;
-		return al_show_native_message_box(DISPLAY,
-										"Attenzione",
-										"Potrebbe esserci un problema!",
-										text,
-										button,
-										ALLEGRO_MESSAGEBOX_WARN);
+		return al_show_native_message_box(DISPLAY, "Attenzione", "Potrebbe esserci un problema!", text, button, ALLEGRO_MESSAGEBOX_WARN);
 	case ALLEGRO_MESSAGEBOX_ERROR:
-		std::cerr << text << std::endl;
-		return al_show_native_message_box(DISPLAY,
-										"Errore Allegro 5",
-										"Errore inizializzazione!",
-										text,
-										button,
-										ALLEGRO_MESSAGEBOX_ERROR);
+		return al_show_native_message_box(DISPLAY, "Errore Allegro 5", "Errore inizializzazione!", text, button, ALLEGRO_MESSAGEBOX_ERROR);
 	case ALLEGRO_MESSAGEBOX_QUESTION:
-		std::cerr << text << std::endl;
-		return al_show_native_message_box(DISPLAY,
-										"Domanda",
-										"Scegliere come procedere.",
-										text,
-										button,
-										ALLEGRO_MESSAGEBOX_QUESTION);
-
+		return al_show_native_message_box(DISPLAY, "Domanda", "Scegliere come procedere.", text, button, ALLEGRO_MESSAGEBOX_QUESTION);
 	case ALLEGRO_MESSAGEBOX_OK_CANCEL:
-		std::cerr << text << std::endl;
-		return al_show_native_message_box(DISPLAY,
-										"Ok / Cancella",
-										"Cosa vuoi fare?",
-										text,
-										button,
-										ALLEGRO_MESSAGEBOX_OK_CANCEL);
+		return al_show_native_message_box(DISPLAY, "Ok / Cancella", "Cosa vuoi fare?", text, button, ALLEGRO_MESSAGEBOX_OK_CANCEL);
 	case ALLEGRO_MESSAGEBOX_YES_NO:
-		std::cerr << text << std::endl;
-		return al_show_native_message_box(DISPLAY,
-										"Si / No",
-										"Scelta.",
-										text,
-										button,
-										ALLEGRO_MESSAGEBOX_YES_NO);
+		return al_show_native_message_box(DISPLAY, "Si / No", "Scelta.", text, button, ALLEGRO_MESSAGEBOX_YES_NO);
 	default:
-		std::cerr << text << std::endl;
-		return al_show_native_message_box(DISPLAY,
-										"Errore",
-										"Errore del programma",
-										text,
-										button,
-										ALLEGRO_MESSAGEBOX_ERROR);
+		return al_show_native_message_box(DISPLAY, "Errore", "Errore del programma", text, button, ALLEGRO_MESSAGEBOX_ERROR);
 	}
 
 	return -1;																	// -1: Errore // 0: Chiusura // 1: Ok/Yes // 2: Cancel/No

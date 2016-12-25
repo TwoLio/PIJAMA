@@ -14,12 +14,11 @@
 class EnemyBot : public GameObject
 {
 	public:
-	EnemyBot(float health, ALLEGRO_FONT *font,
+	EnemyBot(float x, float y, float health,
 			obj_state state = IDLE, obj_type type = ENEMY,
-			obj_dir direction = WEST, int size = 32,
-			float sight = 100.0f, float speed = 1.f,
-			float offsetX = 250.0f, float offsetY = 0.0f)	:
-	GameObject(health, font, state, type, direction, size, sight, speed, offsetX, offsetY)	{}
+			obj_dir direction = NORTH, int size = 32,
+			float sight = 100.0f, float speed = 1.f)	:
+	GameObject(x, y, health, state, type, direction, size, sight, speed)	{}
 
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
 	{
@@ -79,12 +78,11 @@ class EnemyBot : public GameObject
 class Bot : public GameObject
 {
 	public:
-	Bot(float health, ALLEGRO_FONT *font,
+	Bot(float x, float y, float health,
 		obj_state state = IDLE, obj_type type = FRIEND,
-		obj_dir direction = EAST, int size = 32,
-		float sight = 100.0f, float speed = 1.f,
-		float offsetX = -250.0f, float offsetY = 32.0f)	:
-	GameObject(health, font, state, type, direction, size, sight, speed, offsetX, offsetY)	{}
+		obj_dir direction = NORTH, int size = 32,
+		float sight = 100.0f, float speed = 1.f)	:
+	GameObject(x, y, health, state, type, direction, size, sight, speed)	{}
 
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
 	{
@@ -146,12 +144,11 @@ class Player : public GameObject
 	GameInput	*gameInput;
 
 	public:
-	Player(float health, ALLEGRO_FONT *font,
+	Player(float x, float y, float health,
 			obj_state state = WALK, obj_type type = PLAYER,
-			obj_dir direction = EAST, int size = 32,
-			float sight = 0.0f, float speed = 1.f,
-			float offsetX = -250.0f, float offsetY = -32.0f)	:
-	GameObject(health, font, state, type, direction, size, sight, speed, offsetX, offsetY)
+			obj_dir direction = SOUTH, int size = 32,
+			float sight = 0.0f, float speed = 1.f)	:
+	GameObject(x, y, health, state, type, direction, size, sight, speed)
 	{
 		this->gameInput = new GameInput();
 	}
@@ -169,12 +166,12 @@ class Player : public GameObject
 	void input(int keyCode, bool keyFlag)
 	{
 		this->getGameInput()->setKey(keyCode, keyFlag);
+		this->getGameInput()->updateKeyState();
+		this->getGameInput()->updateMouseState();
 	}
 
 	void update(GameObject *obj)
 	{
-		this->getGameInput()->getKeyState();
-		this->getGameInput()->getMouseState();
 		this->move(obj);
 	}
 
