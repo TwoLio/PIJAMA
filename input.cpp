@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_font.h>
@@ -14,6 +16,7 @@ class GameInput
 	ALLEGRO_MOUSE_STATE		mouseState;
 
 	bool					keys[ALLEGRO_KEY_MAX];
+	unsigned int			mouseNumAxis;
 	unsigned int			mouseNumButtons;
 
 	public:
@@ -23,6 +26,7 @@ class GameInput
 			this->keys[i] = false;
 
 		this->mouseNumButtons = al_get_mouse_num_buttons();
+		this->mouseNumAxis = al_get_mouse_num_axes();
 	}
 
 	bool getKey(int keyCode)
@@ -35,19 +39,24 @@ class GameInput
 		this->keys[keyCode] = keyFlag;
 	}	
 
-	void getKeyState()
+	bool keyDown(int keyCode)
+	{
+		return al_key_down(&keyState, keyCode);
+	}
+
+	void updateKeyState()
 	{
 		al_get_keyboard_state(&keyState);
 	}
 
-	void getMouseState()
+	ALLEGRO_KEYBOARD_STATE* getKeyState()
 	{
-		al_get_mouse_state(&mouseState);
+		return &keyState;
 	}
 
-	bool keyDown(int keyCode)
+	int getMouseStateAxis(int axis)				//	0: x-axis	1: y-axis	2: z-axis	3: w-axis
 	{
-		return al_key_down(&keyState, keyCode);
+		return al_get_mouse_state_axis(&mouseState, axis);
 	}
 
 	bool mouseButtonDown(int button)
@@ -55,8 +64,13 @@ class GameInput
 		return al_mouse_button_down(&mouseState, button);
 	}
 
-	int getMouseStateAxis(int axis)				//	0: x-axis	1: y-axis	2: z-axis	3: w-axis
+	void updateMouseState()
 	{
-		return al_get_mouse_state_axis(&mouseState, axis);
+		al_get_mouse_state(&mouseState);
+	}
+
+	ALLEGRO_MOUSE_STATE* getMouseState()
+	{
+		return &mouseState;
 	}
 };
