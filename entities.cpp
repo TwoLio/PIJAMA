@@ -144,18 +144,14 @@ class Player : public GameObject
 	GameInput	*gameInput;
 
 	public:
-	Player(float x, float y, float health,
+	Player(GameInput *gameInput,
+			float x, float y, float health,
 			obj_state state = WALK, obj_type type = PLAYER,
 			obj_dir direction = SOUTH, int size = 32,
 			float sight = 0.0f, float speed = 1.f)	:
 	GameObject(x, y, health, state, type, direction, size, sight, speed)
 	{
-		this->gameInput = new GameInput();
-	}
-
-	~Player()
-	{
-		delete gameInput;
+		this->gameInput = gameInput;
 	}
 
 	GameInput* getGameInput()
@@ -165,9 +161,9 @@ class Player : public GameObject
 
 	void input(int keyCode, bool keyFlag)
 	{
-		this->getGameInput()->setKey(keyCode, keyFlag);
-		this->getGameInput()->updateKeyState();
-		this->getGameInput()->updateMouseState();
+		this->gameInput->setKey(keyCode, keyFlag);
+		this->gameInput->updateKeyState();
+		this->gameInput->updateMouseState();
 	}
 
 	void update(GameObject *obj)
@@ -190,46 +186,46 @@ class Player : public GameObject
 	{
 		this->state = IDLE;
 
-		if (this->getGameInput()->getKey(ALLEGRO_KEY_UP))
+		if (this->gameInput->getKey(ALLEGRO_KEY_UP))
 		{
 			this->state = WALK;
 
-			if (this->getGameInput()->getKey(ALLEGRO_KEY_LEFT))
+			if (this->gameInput->getKey(ALLEGRO_KEY_LEFT))
 				this->follow(this->x - this->speed, this->y - this->speed, obj);
-			else if (this->getGameInput()->getKey(ALLEGRO_KEY_RIGHT))
+			else if (this->gameInput->getKey(ALLEGRO_KEY_RIGHT))
 				this->follow(this->x + this->speed, this->y - this->speed, obj);
 			else
 				this->follow(this->x, this->y - this->speed, obj);
 		}
-		else if (this->getGameInput()->getKey(ALLEGRO_KEY_DOWN))
+		else if (this->gameInput->getKey(ALLEGRO_KEY_DOWN))
 		{
 			this->state = WALK;
 
-			if (this->getGameInput()->getKey(ALLEGRO_KEY_LEFT))
+			if (this->gameInput->getKey(ALLEGRO_KEY_LEFT))
 				this->follow(this->x - this->speed, this->y + this->speed, obj);
-			else if (this->getGameInput()->getKey(ALLEGRO_KEY_RIGHT))
+			else if (this->gameInput->getKey(ALLEGRO_KEY_RIGHT))
 				this->follow(this->x + this->speed, this->y + this->speed, obj);
 			else
 				this->follow(this->x, this->y + this->speed, obj);
 		}
-		else if (this->getGameInput()->getKey(ALLEGRO_KEY_LEFT))
+		else if (this->gameInput->getKey(ALLEGRO_KEY_LEFT))
 		{
 			this->state = WALK;
 
-			if (this->getGameInput()->getKey(ALLEGRO_KEY_UP))
+			if (this->gameInput->getKey(ALLEGRO_KEY_UP))
 				this->follow(this->x - this->speed, this->y - this->speed, obj);
-			else if (this->getGameInput()->getKey(ALLEGRO_KEY_DOWN))
+			else if (this->gameInput->getKey(ALLEGRO_KEY_DOWN))
 				this->follow(this->x - this->speed, this->y + this->speed, obj);
 			else
 				this->follow(this->x - this->speed, this->y, obj);
 		}
-		else if (this->getGameInput()->getKey(ALLEGRO_KEY_RIGHT))
+		else if (this->gameInput->getKey(ALLEGRO_KEY_RIGHT))
 		{
 			this->state = WALK;
 
-			if (this->getGameInput()->getKey(ALLEGRO_KEY_UP))
+			if (this->gameInput->getKey(ALLEGRO_KEY_UP))
 				this->follow(this->x + this->speed, this->y - this->speed, obj);
-			else if (this->getGameInput()->getKey(ALLEGRO_KEY_DOWN))
+			else if (this->gameInput->getKey(ALLEGRO_KEY_DOWN))
 				this->follow(this->x + this->speed, this->y + this->speed, obj);
 			else
 				this->follow(this->x + this->speed, this->y, obj);
