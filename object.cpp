@@ -17,7 +17,6 @@
 //#include <glm/mat4x4.hpp> // glm::mat4
 //#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 
-
 #include "globals.h"
 
 class GameObject
@@ -222,11 +221,13 @@ class GameObject
 		}
 	}
 
-	float getAngle(float x, float y)
+	ALLEGRO_FONT* getFont()
 	{
-		float dx = x - this->x;
-		float dy = y - this->y;
-		return atan2(dy, dx);
+		return this->font;
+	}
+	void setFont(ALLEGRO_FONT *font)
+	{
+		this->font = font;
 	}
 
 	float getAngle(GameObject *obj)
@@ -236,14 +237,11 @@ class GameObject
 		return atan2(dy, dx);
 	}
 
-	ALLEGRO_FONT* getFont()
+	float getAngle(float x, float y)
 	{
-		return this->font;
-	}
-
-	void setFont(ALLEGRO_FONT *font)
-	{
-		this->font = font;
+		float dx = x - this->x;
+		float dy = y - this->y;
+		return atan2(dy, dx);
 	}
 
 	float getX()
@@ -294,20 +292,10 @@ class GameObject
 		this->spawnY = spawnY;
 	}
 
-	float getSightDistance()
-	{
-		return this->sight;
-	}
-	void setSightDistance(float sight)
-	{
-		this->sight = sight;
-	}
-
 	int getWidthSize()
 	{
 		return this->sizeW;
 	}
-
 	void setWidthSize(int sizeW)
 	{
 		this->sizeW = sizeW;
@@ -317,40 +305,18 @@ class GameObject
 	{
 		return this->sizeW;
 	}
-
 	void setHeightSize(int sizeH)
 	{
 		this->sizeH = sizeH;
-	}
-
-	float getSpeed()
-	{
-		return this->speed;
-	}
-
-	void setSpeed(float speed)
-	{
-		this->speed = speed;
 	}
 
 	float getRadius()
 	{
 		return this->radius;
 	}
-
 	void setRadius(float radius)
 	{
 		this->radius = radius;
-	}
-
-	obj_state getState()
-	{
-		return this->state;
-	}
-
-	void setState(obj_state state)
-	{
-		this->state = state;
 	}
 
 	float getDistance(float x, float y)
@@ -361,6 +327,33 @@ class GameObject
 	float getDistance(GameObject *obj)
 	{
 		return sqrt(pow(obj->x - this->x, 2) + pow(obj->y - this->y, 2));
+	}
+
+	float getSightDistance()
+	{
+		return this->sight;
+	}
+	void setSightDistance(float sight)
+	{
+		this->sight = sight;
+	}
+
+	float getSpeed()
+	{
+		return this->speed;
+	}
+	void setSpeed(float speed)
+	{
+		this->speed = speed;
+	}
+
+	obj_state getState()
+	{
+		return this->state;
+	}
+	void setState(obj_state state)
+	{
+		this->state = state;
 	}
 
 	bool getCollisionBB(GameObject *obj)	//Bounding Box Collision
