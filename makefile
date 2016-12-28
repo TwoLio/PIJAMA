@@ -8,7 +8,7 @@ PJEngine: $(OBJ)
 
 corePJ.o: corePJ.cpp game.cpp
 display.o: display.cpp entities.cpp
-game.o: game.cpp display.cpp
+game.o: game.cpp display.cpp map.cpp
 entities.o: entities.cpp input.cpp object.cpp
 
 clean:
