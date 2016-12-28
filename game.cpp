@@ -1,54 +1,55 @@
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_image.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_acodec.h>
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_native_dialog.h>
-#include <allegro5/allegro_opengl.h>
-
 #include "display.cpp"
+#include "map.cpp"
 
 class Game
 {
 	protected:
 	ALLEGRO_EVENT_QUEUE		*eventQueue;
+	ALLEGRO_CONFIG			*gameConfig;
+
 	GameDisplay				*gameDisplay;
 	GameInput				*gameInput;
+	GameMap					*gameMap;
 
 	Player					*p1;
-	Bot						*f_bot1;
+	Bot						*f_bot;
 	EnemyBot				*e_bot;
 
 	bool					render;
-	bool					exitGame;
+	bool					exit;
+
+	game_state				gameState;
+
 
 	public:
 	Game()
 	{
 		this->gameDisplay = NULL;
 		this->gameInput = NULL;
+		this->gameMap = NULL;
+		this->gameConfig = NULL;
 		this->eventQueue = NULL;
 
 		this->p1 = NULL;
-		this->f_bot1 = NULL;
 		this->e_bot = NULL;
+		this->f_bot = NULL;
 
 		this->render = false;
-		this->exitGame = false;
+		this->exit = false;
 	}
 
 	~Game()
 	{
+		al_shutdown_native_dialog_addon();
+		al_destroy_config(gameConfig);
+		al_destroy_event_queue(eventQueue);
+
 		delete e_bot;
-		delete f_bot1;
+		delete f_bot;
 		delete p1;
+		delete gameMap;
 		delete gameInput;
 		delete gameDisplay;
-
-		al_shutdown_native_dialog_addon();
-		al_destroy_event_queue(eventQueue);
 	}
 
 	bool initAllegro()
@@ -56,8 +57,9 @@ class Game
 		if (!al_init())
 			return false;
 
-		al_install_keyboard();
 		al_install_mouse();
+		al_install_keyboard();
+//		al_install_joystick();
 		al_install_audio();
 		al_init_acodec_addon();
 		al_init_primitives_addon();
@@ -65,6 +67,21 @@ class Game
 		al_init_font_addon();
 		al_init_ttf_addon();
 		al_init_native_dialog_addon();
+
+		return true;
+	}
+
+	bool initConfig()
+	{
+		this->gameConfig = al_load_config_file("cfg/base.cfg");
+		if (!gameConfig)
+		{
+			this->gameConfig = al_create_config();
+			if (!al_save_config_file("cfg/base.cfg", gameConfig))
+				return false;
+
+			this->gameConfig = al_load_config_file("cfg/base.cfg");
+		}
 
 		return true;
 	}
@@ -80,23 +97,31 @@ class Game
 
 		this->gameInput = new GameInput();
 
+		if (!this->initConfig())
+			return false;
+
+		this->gameMap = new GameMap();
+		if (!this->gameMap->load("cfg/map.txt"))
+			return false;
+
 		this->p1 = new Player(gameInput, 800, 800, 100.);
-		this->f_bot1 = new Bot(800, 850, 100.);
+		this->f_bot = new Bot(800, 850, 100.);
 		this->e_bot = new EnemyBot(1280, 1440, 100.);
 
 		p1->setFont(gameDisplay->getFont(1));
-		f_bot1->setFont(gameDisplay->getFont(1));
+		f_bot->setFont(gameDisplay->getFont(1));
 		e_bot->setFont(gameDisplay->getFont(1));
 
 		eventQueue = al_create_event_queue();
 		if (!eventQueue)
 			return false;
 
+		al_register_event_source(eventQueue, al_get_mouse_event_source());
+		al_register_event_source(eventQueue, al_get_keyboard_event_source());
+//		al_register_event_source(eventQueue, al_get_joystick_event_source());
 		al_register_event_source(eventQueue, al_get_timer_event_source(gameDisplay->getTimerFPS()));
 		al_register_event_source(eventQueue, al_get_timer_event_source(gameDisplay->getTimerAnimation()));
 		al_register_event_source(eventQueue, al_get_display_event_source(gameDisplay->getDisplay()));
-		al_register_event_source(eventQueue, al_get_mouse_event_source());
-		al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
 		return true;
 	}
@@ -107,12 +132,10 @@ class Game
 		this->gameDisplay->startTimerAnimation();
 		this->gameDisplay->startTimerFPS();
 
-		while(!this->exitGame)
+		while(!this->exit)
 		{
 			ALLEGRO_EVENT event;
-//			ALLEGRO_TIMEOUT timeout;
-//			al_init_timeout(&timeout, 0.06);
-//			bool getEvent = al_wait_for_event_until(eventQueue, &event, &timeout);
+
 			al_wait_for_event(eventQueue, &event);
 
 			if (event.type == ALLEGRO_EVENT_KEY_DOWN)
@@ -134,13 +157,12 @@ class Game
 			else if (event.type == ALLEGRO_EVENT_MOUSE_AXES ||
 					 event.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY)
 			{
-				//p1->setX(event.mouse.x);
-				//p1->setY(event.mouse.y);
+				//p1->setDirection(event.mouse.x, event.mouse.y);
 				//gameDisplay->setScale(event.mouse.dz/10.);
 			}
 			else if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 			{
-				this->exitGame = true;
+				this->exit = true;
 			}
 			else if (event.type == ALLEGRO_EVENT_TIMER)
 			{
@@ -149,22 +171,20 @@ class Game
 					this->gameDisplay->updateFPS();
 
 					if (this->gameInput->keyDown(ALLEGRO_KEY_ESCAPE))
-						this->exitGame = true;
+						this->exit = true;
+					if (this->gameInput->keyDown(ALLEGRO_KEY_L))
+						this->gameMap->loadRT("cfg/map.txt");
 
-					this->p1->update(this->f_bot1);
-					this->f_bot1->update(this->e_bot, this->p1);
-
-					if (this->e_bot->getDistance(this->f_bot1) < this->e_bot->getDistance(this->p1))
-						this->e_bot->update(this->f_bot1);
-					else
-						this->e_bot->update(this->p1);
+					this->p1->update(this->e_bot);
+					this->f_bot->update(this->e_bot, this->p1);
+					this->e_bot->update(this->p1);
 
 					this->gameDisplay->updateCamera(this->p1);
 				}
 				else if (event.timer.source == this->gameDisplay->getTimerAnimation())
 				{
 					this->p1->updateAnimation();
-					this->f_bot1->updateAnimation();
+					this->f_bot->updateAnimation();
 					this->e_bot->updateAnimation();
 				}
 
@@ -175,8 +195,10 @@ class Game
 			{
 				this->render = false;
 
+				this->gameMap->draw(500, 500);
+
 				this->p1->render();
-				this->f_bot1->render();
+				this->f_bot->render();
 				this->e_bot->render();
 
 				this->gameDisplay->draw();
@@ -184,9 +206,14 @@ class Game
 		}
 	}
 
-	void changeState(int &state, int newState)
+	game_state getState()
 	{
-		state = newState;
+		return this->gameState;
+	}
+
+	void setState(game_state gameState)
+	{
+		this->gameState = gameState;
 	}
 
 	ALLEGRO_BITMAP*	createBitmapFromLayers(ALLEGRO_BITMAP *texture[], int n)
