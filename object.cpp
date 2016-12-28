@@ -3,6 +3,8 @@
 
 #include "globals.h"
 
+//	TODO	Migliorare movimenti e direzioni
+
 class GameObject
 {
 	protected:
