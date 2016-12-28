@@ -1,21 +1,5 @@
 #include <cmath>
-#include <iostream>
 #include <sstream>
-
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_image.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_acodec.h>
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_opengl.h>
-#include <allegro5/allegro_native_dialog.h>
-
-//#include <glm/vec3.hpp> // glm::vec3
-//#include <glm/vec4.hpp> // glm::vec4
-//#include <glm/mat4x4.hpp> // glm::mat4
-//#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 
 #include "globals.h"
 
@@ -139,13 +123,21 @@ class GameObject
 		this->textSourceY = (this->direction - 4*this->animation) * this->sizeH;
 	}
 
+	void follow(float x, float y)
+	{
+		float angle = this->getAngle(x, y);
+		this->setDirection(angle);
+		this->x += this->speed * cos(angle);
+		this->y += this->speed * sin(angle);
+	}
+
 	void follow(GameObject *obj)
 	{
 		float angle = this->getAngle(obj);
 		this->setDirection(angle);
 
 		float dir;
-		if (this->getCollisionPP(obj))
+		if (this->getCollisionBB(obj))
 			dir = -5.*(this->speed);
 		else
 			dir = this->speed;
@@ -156,25 +148,40 @@ class GameObject
 
 	void follow(float x, float y, GameObject *obj)
 	{
-		float angle = this->getAngle(x, y);
-		this->setDirection(angle);
+		float dirAngle = this->getAngle(x, y);
+
+		if (this->getDistance(obj) < this->sight)
+		{
+			float objAngle = this->getAngle(obj);
+			this->setDirection(objAngle);
+		}
+		else
+			this->setDirection(dirAngle);
 
 		float dir;
-		if (this->getCollisionPP(obj))
+		if (this->getCollisionBB(obj))
 			dir = -5.*(this->speed);
 		else
 			dir = this->speed;
 
-		this->x += dir * cos(angle);
-		this->y += dir * sin(angle);
+		this->x += dir * cos(dirAngle);
+		this->y += dir * sin(dirAngle);
 	}
 
-	void follow(float x, float y)
+	void follow(GameObject *obj, GameObject *target)
 	{
-		float angle = this->getAngle(x, y);
-		this->setDirection(angle);
-		this->x += this->speed * cos(angle);
-		this->y += this->speed * sin(angle);
+		float objAngle = this->getAngle(obj);
+		float tarAngle = this->getAngle(target);
+		this->setDirection(tarAngle);
+
+		float dir;
+		if (this->getCollisionBB(obj) || this->getCollisionBB(target))
+			dir = -5.*(this->speed);
+		else
+			dir = this->speed;
+
+		this->x += dir * cos(objAngle);
+		this->y += dir * sin(objAngle);
 	}
 
 	void setDirection(float angle)
