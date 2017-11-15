@@ -159,13 +159,16 @@ class Player : public GameObject
 		return this->gameInput;
 	}
 
-	void move()	{}
+	void move()
+	{
+
+	}
 
 	void input(int keyCode, bool keyFlag)
 	{
 		this->gameInput->setKey(keyCode, keyFlag);
-		this->gameInput->updateKeyState();
 		this->gameInput->updateMouseState();
+		this->gameInput->updateKeyboardState();
 	}
 
 	void render(int r = 0, int g = 0, int b = 255)

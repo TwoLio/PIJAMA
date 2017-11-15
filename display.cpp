@@ -33,6 +33,9 @@ class GameDisplay
 	public:
 	GameDisplay()
 	{
+		al_install_audio();
+		al_init_acodec_addon();
+
 		al_inhibit_screensaver(true);
 		al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
 
@@ -74,7 +77,6 @@ class GameDisplay
 
 	~GameDisplay()
 	{
-		al_show_mouse_cursor(this->display);
 		for (int i = 0; i < DSP_FONTS; i++)
 			al_destroy_font(this->font[i]);
 		for (int i = 0; i < DSP_SOUNDS; i++)
@@ -85,6 +87,7 @@ class GameDisplay
 		al_destroy_timer(this->timerFPS);
 		al_destroy_timer(this->timerAnim);
 		//al_destroy_bitmap(this->icon);
+		al_show_mouse_cursor(this->display);
 		al_destroy_display(this->display);
 		al_inhibit_screensaver(false);
 	}

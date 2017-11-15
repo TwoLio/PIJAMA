@@ -7,10 +7,9 @@
 
 class GameObject
 {
-	protected:
+	public:
 	static const int OBJ_TEXTURES = 2;
 
-	public:
 	float			health;
 	float			speed;
 	float			sight;

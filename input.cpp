@@ -4,21 +4,36 @@ class GameInput
 {
 	protected:
 	ALLEGRO_KEYBOARD_STATE	keyState;
-	ALLEGRO_MOUSE_STATE		mouseState;
-
 	bool					keys[ALLEGRO_KEY_MAX];
-	unsigned int			mouseNumAxis;
-	unsigned int			mouseNumButtons;
 
+	ALLEGRO_MOUSE_STATE		mouseState;
+	unsigned int			numMouseAxes;
+	unsigned int			numMouseButtons;
+
+/*	ALLEGRO_JOYSTICK		*joystick;
+	ALLEGRO_JOYSTICK_STATE	joyState;
+	unsigned int			numJoysticks;
+	unsigned int			numButtons;
+	unsigned int			numSticks;
+*/
 	public:
 	GameInput()
 	{
+		al_install_mouse();
+		al_install_keyboard();
+//		al_install_joystick();
+
 		for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
 			this->keys[i] = false;
 
-		this->mouseNumButtons = al_get_mouse_num_buttons();
-		this->mouseNumAxis = al_get_mouse_num_axes();
+		this->numMouseButtons = al_get_mouse_num_buttons();
+		this->numMouseAxes = al_get_mouse_num_axes();
+
+//		if (al_is_joystick_installed())
+//			this->initJoystick();
 	}
+
+	~GameInput()	{}
 
 	bool getKey(int keyCode)
 	{
@@ -35,7 +50,7 @@ class GameInput
 		return al_key_down(&keyState, keyCode);
 	}
 
-	void updateKeyState()
+	void updateKeyboardState()
 	{
 		al_get_keyboard_state(&keyState);
 	}
@@ -64,4 +79,37 @@ class GameInput
 	{
 		return &mouseState;
 	}
+
+/*	void initJoystick()
+	{
+		this->numJoysticks = al_get_num_joysticks();
+//		this->joystick = new ALLEGRO_JOYSTICK* [this->numJoysticks];
+//		for (int i = 0; i < this->numJoysticks; i++)
+//			this->joystick[i] = al_get_joystick(i);
+		this->joystick = al_get_joystick(0);
+		this->numSticks = al_get_joystick_num_sticks(joystick);
+		this->numButtons = al_get_joystick_num_buttons(joystick);
+	}
+
+	void reconfigJoystick()
+	{
+		if (al_reconfigure_joysticks())
+			this->initJoystick();
+	}
+
+	bool getJoystickActive()
+	{
+		return al_get_joystick_active(joystick);
+	}
+
+	void updateJoystickState()
+	{
+		al_get_joystick_state(joystick, &joyState);
+	}
+
+	ALLEGRO_JOYSTICK_STATE* getJoystickState()
+	{
+		return &joyState;
+	}
+*/
 };

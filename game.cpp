@@ -57,13 +57,8 @@ class Game
 		if (!al_init())
 			return false;
 
-		al_install_mouse();
-		al_install_keyboard();
-//		al_install_joystick();
-		al_install_audio();
-		al_init_acodec_addon();
-		al_init_primitives_addon();
 		al_init_image_addon();
+		al_init_primitives_addon();
 		al_init_font_addon();
 		al_init_ttf_addon();
 		al_init_native_dialog_addon();
@@ -135,8 +130,9 @@ class Game
 		while(!this->exit)
 		{
 			ALLEGRO_EVENT event;
-
 			al_wait_for_event(eventQueue, &event);
+
+			//this->gameInput->updateJoystickState();
 
 			if (event.type == ALLEGRO_EVENT_KEY_DOWN)
 			{
@@ -154,6 +150,24 @@ class Game
 			{
 
 			}
+/*			else if (event.type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)
+			{
+				std::cout << event.joystick.button << std::endl;
+			}
+			else if (event.type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP)
+			{
+
+			}
+			else if (event.type == ALLEGRO_EVENT_JOYSTICK_AXIS)
+			{
+				//std::cout << event.joystick.pos << std::endl;
+				std::cout << event.joystick.axis << std::endl;
+				std::cout << event.joystick.stick << std::endl;
+			}
+			else if (event.type == ALLEGRO_EVENT_JOYSTICK_CONFIGURATION)
+			{
+				//this->gameInput->reconfigJoystick();
+			}*/
 			else if (event.type == ALLEGRO_EVENT_MOUSE_AXES ||
 					 event.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY)
 			{
