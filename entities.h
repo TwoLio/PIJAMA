@@ -1,0 +1,6 @@
+#ifndef PIJAM_ENTITIES_H
+#define PIJAM_ENTITIES_H 1
+
+
+
+#endif // PIJAM_ENTITIES_H

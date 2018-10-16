@@ -1,115 +1,46 @@
-#include "globals.h"
+#include "input.h"
 
-class GameInput
-{
-	protected:
-	ALLEGRO_KEYBOARD_STATE	keyState;
-	bool					keys[ALLEGRO_KEY_MAX];
+GameInput::GameInput() :
+	mouseNumButtons(al_get_mouse_num_buttons()),
+	mouseNumAxis(al_get_mouse_num_axes()) {
+	for (int i = 0; i < ALLEGRO_KEY_MAX; ++i)
+		keys[i] = false;
+}
 
-	ALLEGRO_MOUSE_STATE		mouseState;
-	unsigned int			numMouseAxes;
-	unsigned int			numMouseButtons;
+GameInput::~GameInput() {}
 
-/*	ALLEGRO_JOYSTICK		*joystick;
-	ALLEGRO_JOYSTICK_STATE	joyState;
-	unsigned int			numJoysticks;
-	unsigned int			numButtons;
-	unsigned int			numSticks;
-*/
-	public:
-	GameInput()
-	{
-		al_install_mouse();
-		al_install_keyboard();
-//		al_install_joystick();
+bool GameInput::getKey(int keyCode) {
+	return keys[keyCode];
+}
 
-		for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
-			this->keys[i] = false;
+void GameInput::setKey(int keyCode, bool keyFlag) {
+	keys[keyCode] = keyFlag;
+}	
 
-		this->numMouseButtons = al_get_mouse_num_buttons();
-		this->numMouseAxes = al_get_mouse_num_axes();
+bool GameInput::keyDown(int keyCode) {
+	return al_key_down(&keyState, keyCode);
+}
 
-//		if (al_is_joystick_installed())
-//			this->initJoystick();
-	}
+bool GameInput::buttonDown(int button) {
+	return al_mouse_button_down(&mouseState, button);
+}
 
-	~GameInput()	{}
+void GameInput::updateKeyboard() {
+	al_get_keyboard_state(&keyState);
+}
 
-	bool getKey(int keyCode)
-	{
-		return this->keys[keyCode];
-	}
+void GameInput::updateMouse() {
+	al_get_mouse_state(&mouseState);
+}
 
-	void setKey(int keyCode, bool keyFlag)
-	{
-		this->keys[keyCode] = keyFlag;
-	}	
+int GameInput::getMouseStateAxis(int axis) {
+	return al_get_mouse_state_axis(&mouseState, axis);
+}
 
-	bool keyDown(int keyCode)
-	{
-		return al_key_down(&keyState, keyCode);
-	}
+ALLEGRO_KEYBOARD_STATE& GameInput::getKeyState() {
+	return keyState;
+}
 
-	void updateKeyboardState()
-	{
-		al_get_keyboard_state(&keyState);
-	}
-
-	ALLEGRO_KEYBOARD_STATE* getKeyState()
-	{
-		return &keyState;
-	}
-
-	int getMouseStateAxis(int axis)				//	0: x-axis	1: y-axis	2: z-axis	3: w-axis
-	{
-		return al_get_mouse_state_axis(&mouseState, axis);
-	}
-
-	bool mouseButtonDown(int button)
-	{
-		return al_mouse_button_down(&mouseState, button);
-	}
-
-	void updateMouseState()
-	{
-		al_get_mouse_state(&mouseState);
-	}
-
-	ALLEGRO_MOUSE_STATE* getMouseState()
-	{
-		return &mouseState;
-	}
-
-/*	void initJoystick()
-	{
-		this->numJoysticks = al_get_num_joysticks();
-//		this->joystick = new ALLEGRO_JOYSTICK* [this->numJoysticks];
-//		for (int i = 0; i < this->numJoysticks; i++)
-//			this->joystick[i] = al_get_joystick(i);
-		this->joystick = al_get_joystick(0);
-		this->numSticks = al_get_joystick_num_sticks(joystick);
-		this->numButtons = al_get_joystick_num_buttons(joystick);
-	}
-
-	void reconfigJoystick()
-	{
-		if (al_reconfigure_joysticks())
-			this->initJoystick();
-	}
-
-	bool getJoystickActive()
-	{
-		return al_get_joystick_active(joystick);
-	}
-
-	void updateJoystickState()
-	{
-		al_get_joystick_state(joystick, &joyState);
-	}
-
-	ALLEGRO_JOYSTICK_STATE* getJoystickState()
-	{
-		return &joyState;
-	}
-*/
-};
+ALLEGRO_MOUSE_STATE& GameInput::getMouseState() {
+	return mouseState;
+}

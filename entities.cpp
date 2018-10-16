@@ -1,11 +1,10 @@
 #include "object.cpp"
-#include "input.cpp"
+#include "input.h"
 
 /*	TODO
 	~ Migliorare IA dei bot friendly;
 	~ Aggiornare logica della zona di visione dei bot enemy:
 		facendola rimanere sempre intorno al bot (e non allo spawn) e ridurla;
-
 	~ Improve AI for friendly bot;
 	~ Update enemy sight logic:
 		switching from being fixed to spawnpoint, to following the enemy bot;
@@ -159,16 +158,13 @@ class Player : public GameObject
 		return this->gameInput;
 	}
 
-	void move()
-	{
-
-	}
+	void move()	{}
 
 	void input(int keyCode, bool keyFlag)
 	{
 		this->gameInput->setKey(keyCode, keyFlag);
-		this->gameInput->updateMouseState();
-		this->gameInput->updateKeyboardState();
+		this->gameInput->updateKeyboard();
+		this->gameInput->updateMouse();
 	}
 
 	void render(int r = 0, int g = 0, int b = 255)

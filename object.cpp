@@ -1,15 +1,16 @@
 #include <cmath>
 #include <sstream>
 
-#include "globals.h"
+#include "state.h"
 
 //	TODO	Migliorare movimenti e direzioni
 
 class GameObject
 {
-	public:
+	protected:
 	static const int OBJ_TEXTURES = 2;
 
+	public:
 	float			health;
 	float			speed;
 	float			sight;
@@ -68,7 +69,7 @@ class GameObject
 		this->columnFrame = 4;
 	}
 
-	~GameObject()	
+	virtual ~GameObject()	
 	{
 		for (int i = 0; i < OBJ_TEXTURES; i++)
 			al_destroy_bitmap(texture[i]);

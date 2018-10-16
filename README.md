@@ -1,11 +1,10 @@
 # PiJam Engine (version A)
-Project PIJAMA: Open Source 'cross-platform (WIP)' 2D Game Engine for future open source videogames development.
+Project PIJAMA: Open Source Game Engine for experimental open source videogames development.
 
-Compile with `make`. Use `make clean` to remove object files.
+Compile with `make`. Use `make rave` to generate dependencies file, `make clean` to remove object files, `make sert` to remove object files and dependencies file.
 
 Libraries:
 - Allegro
-- GLM
 
 Sources:
 - Allegro 5 Official Page

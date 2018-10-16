@@ -1,13 +1,12 @@
-#include "game.cpp"
+#include "game.h"
 
-int main(int argc, char **argv)
+int main()
 {
-	Game	*game = new Game();
-	if (!game->init())
-		return game->showMessageBox("Inizializzazione fallita a causa di un errore sconosciuto.", ALLEGRO_MESSAGEBOX_ERROR);
+	Game game;
+	if (!game.init())
+		return game.showMessage("Inizializzazione fallita a causa di un errore sconosciuto.", ALLEGRO_MESSAGEBOX_ERROR);
 
-	game->run();
+	game.run();
 
-	delete game;
 	return 0;
 }
