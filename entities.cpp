@@ -19,6 +19,8 @@ class EnemyBot : public GameObject
 			float sight = 100.0f, float speed = 1.f)	:
 	GameObject(x, y, health, state, type, direction, size, sight, speed)	{}
 
+	virtual ~EnemyBot() {}
+
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
 	{
 		if (this->state == IDLE)
@@ -82,6 +84,8 @@ class Bot : public GameObject
 		obj_dir direction = NORTH, int size = 32,
 		float sight = 100.0f, float speed = 1.f)	:
 	GameObject(x, y, health, state, type, direction, size, sight, speed)	{}
+
+	virtual ~Bot() {}
 
 	void update(GameObject *target = NULL, GameObject *obj = NULL)
 	{
@@ -152,6 +156,8 @@ class Player : public GameObject
 	{
 		this->gameInput = gameInput;
 	}
+
+	virtual ~Player() {}
 
 	GameInput* getGameInput()
 	{

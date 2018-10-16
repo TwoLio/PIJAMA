@@ -12,23 +12,19 @@
 #include <allegro5/allegro_opengl.h>
 
 #include "entities.cpp"
+#include "f_timer.h"
 
 class GameDisplay {
 private:
 	static const int		DSP_FONTS = 2;
 	static const int		DSP_SOUNDS = 3;
-	constexpr static const float		FPS = 60.;
 
 	ALLEGRO_DISPLAY 		*display;
 	ALLEGRO_DISPLAY_MODE	displayMode;
 	int						nDisplayModes;
 
-	float					gameTime;
-	int						frames,	gameFPS;
-	ALLEGRO_TIMER			*timerFPS;
-
-	float					animFrames;		//	Increments for running animation, decrements for walking animation
-	ALLEGRO_TIMER			*timerAnim;
+	FrameTimer				timerFPS;
+	GameTimer				timerAnim;	//	Increments for running animation, decrements for walking animation
 
 	ALLEGRO_FONT			*font[DSP_FONTS];
 	ALLEGRO_SAMPLE			*sound[DSP_SOUNDS];
@@ -45,15 +41,13 @@ public:
 	~GameDisplay();
 
 	void render();
-	void updateFPS();
 
-	void startSFX();
-	void startTimerFPS();
-	void startTimerAnimation();
+	void start();
+
+	FrameTimer& getFramesTimer();
+	GameTimer& getAnimationTimer();
 
 	ALLEGRO_DISPLAY* getDisplay();
-	ALLEGRO_TIMER* getTimerFPS();
-	ALLEGRO_TIMER* getTimerAnimation();
 	ALLEGRO_FONT* getFont(int i);
 
 	int getScreenWidth();

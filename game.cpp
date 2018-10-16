@@ -14,8 +14,6 @@ Game::Game() :
 
 Game::~Game() {
 	al_shutdown_native_dialog_addon();
-	al_destroy_config(gameConfig);
-	al_destroy_event_queue(eventQueue);
 
 	delete e_bot;
 	delete f_bot;
@@ -23,6 +21,9 @@ Game::~Game() {
 	delete gameMap;
 	delete gameInput;
 	delete gameDisplay;
+	delete gameConfig;
+
+	al_destroy_event_queue(eventQueue);
 }
 
 bool Game::initAllegro() {
@@ -44,16 +45,8 @@ bool Game::initAllegro() {
 }
 
 bool Game::initConfig() {
-	this->gameConfig = al_load_config_file("cfg/base.cfg");
-	if (!gameConfig) {
-		this->gameConfig = al_create_config();
-		if (!al_save_config_file("cfg/base.cfg", gameConfig))
-			return false;
-
-		this->gameConfig = al_load_config_file("cfg/base.cfg");
-	}
-
-	return true;
+	gameConfig = new GameConfig();
+	return gameConfig->loadConfig("cfg/base.cfg");
 }
 
 bool Game::initEventQueue() {
@@ -64,8 +57,8 @@ bool Game::initEventQueue() {
 	al_register_event_source(eventQueue, al_get_mouse_event_source());
 	al_register_event_source(eventQueue, al_get_keyboard_event_source());
 //		al_register_event_source(eventQueue, al_get_joystick_event_source());
-	al_register_event_source(eventQueue, al_get_timer_event_source(gameDisplay->getTimerFPS()));
-	al_register_event_source(eventQueue, al_get_timer_event_source(gameDisplay->getTimerAnimation()));
+	al_register_event_source(eventQueue, al_get_timer_event_source(gameDisplay->getFramesTimer().get()));
+	al_register_event_source(eventQueue, al_get_timer_event_source(gameDisplay->getAnimationTimer().get()));
 	al_register_event_source(eventQueue, al_get_display_event_source(gameDisplay->getDisplay()));
 
 	return true;
@@ -103,9 +96,7 @@ bool Game::init() {
 }
 
 void Game::run() {
-	gameDisplay->startSFX();
-	gameDisplay->startTimerAnimation();
-	gameDisplay->startTimerFPS();
+	gameDisplay->start();
 
 	while(!this->exit) {
 		ALLEGRO_EVENT event;
@@ -133,8 +124,8 @@ void Game::run() {
 			this->exit = true;
 		}
 		else if (event.type == ALLEGRO_EVENT_TIMER) {
-			if (event.timer.source == this->gameDisplay->getTimerFPS()) {
-				this->gameDisplay->updateFPS();
+			if (event.timer.source == this->gameDisplay->getFramesTimer().get()) {
+				this->gameDisplay->getFramesTimer().update();
 
 				if (this->gameInput->keyDown(ALLEGRO_KEY_ESCAPE))
 					this->exit = true;
@@ -147,7 +138,7 @@ void Game::run() {
 
 				this->gameDisplay->updateCamera(this->p1);
 			}
-			else if (event.timer.source == this->gameDisplay->getTimerAnimation()) {
+			else if (event.timer.source == this->gameDisplay->getAnimationTimer().get()) {
 				this->p1->updateAnimation();
 				this->f_bot->updateAnimation();
 				this->e_bot->updateAnimation();
@@ -170,7 +161,7 @@ void Game::run() {
 	}
 }
 
-game_state Game::getState() {
+game_state Game::getState() const {
 	return this->gameState;
 }
 
@@ -178,11 +169,11 @@ void Game::setState(game_state gameState) {
 	this->gameState = gameState;
 }
 
-ALLEGRO_BITMAP*	Game::createBitmapFromLayers(ALLEGRO_BITMAP *texture[], int n) {
+ALLEGRO_BITMAP*	Game::createBitmapFromLayers(ALLEGRO_BITMAP *texture[], int n) const {
 	ALLEGRO_BITMAP *bmp = al_create_bitmap(al_get_bitmap_width(texture[0]), al_get_bitmap_height(texture[0]));
 	al_set_target_bitmap(bmp);
 
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; ++i)
 		al_draw_bitmap(texture[i], 0, 0, 0);
 
 	al_save_bitmap("gfx/bmp/bitmap.png", bmp);
@@ -191,7 +182,7 @@ ALLEGRO_BITMAP*	Game::createBitmapFromLayers(ALLEGRO_BITMAP *texture[], int n) {
 	return bmp;
 }
 
-int Game::showMessage(const char *text, int flag, const char *button) {
+int Game::showMessage(const char *text, int flag, const char *button) const {
 	switch (flag) {
 	case ALLEGRO_MESSAGEBOX_WARN:
 		return al_show_native_message_box(DISPLAY, "Attenzione", "Potrebbe esserci un problema!", text, button, ALLEGRO_MESSAGEBOX_WARN);

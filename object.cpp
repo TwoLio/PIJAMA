@@ -69,9 +69,9 @@ class GameObject
 		this->columnFrame = 4;
 	}
 
-	virtual ~GameObject()	
+	~GameObject()	
 	{
-		for (int i = 0; i < OBJ_TEXTURES; i++)
+		for (int i = 0; i < OBJ_TEXTURES; ++i)
 			al_destroy_bitmap(texture[i]);
 		//al_destroy_timer(timer);
 		//al_destroy_sample(sound);
@@ -89,7 +89,7 @@ class GameObject
 
 	void setTexture(const char *folder)
 	{
-		for (int i = 0; i < OBJ_TEXTURES; i++)
+		for (int i = 0; i < OBJ_TEXTURES; ++i)
 		{
 			std::stringstream path;
 			path << folder << "sprite" << i << ".png";
@@ -394,9 +394,9 @@ class GameObject
 		ppBoxLeft = std::max(this->x, obj->x);
 		ppBoxRight = std::min(this->x + this->sizeW, obj->x + obj->sizeW);
 
-		for (int i = ppBoxTop; i < ppBoxBottom; i++)
+		for (int i = ppBoxTop; i < ppBoxBottom; ++i)
 		{
-			for (int j = ppBoxLeft; j < ppBoxRight; j++)
+			for (int j = ppBoxLeft; j < ppBoxRight; ++j)
 			{
 				al_lock_bitmap(this->texture[this->animation], al_get_bitmap_format(this->texture[this->animation]), ALLEGRO_LOCK_READONLY);
 				al_lock_bitmap(obj->texture[obj->animation], al_get_bitmap_format(obj->texture[obj->animation]), ALLEGRO_LOCK_READONLY);

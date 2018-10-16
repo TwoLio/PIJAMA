@@ -1,8 +1,8 @@
 #include "input.h"
 
 GameInput::GameInput() :
-	mouseNumButtons(al_get_mouse_num_buttons()),
-	mouseNumAxis(al_get_mouse_num_axes()) {
+	nMouseButtons(al_get_mouse_num_buttons()),
+	nMouseAxis(al_get_mouse_num_axes()) {
 	for (int i = 0; i < ALLEGRO_KEY_MAX; ++i)
 		keys[i] = false;
 }

@@ -1,6 +1,7 @@
 #ifndef PIJAM_GAME_H
 #define PIJAM_GAME_H 1
 
+#include "config.h"
 #include "display.h"
 #include "input.h"
 #include "map.h"
@@ -8,8 +9,8 @@
 class Game {
 private:
 	ALLEGRO_EVENT_QUEUE		*eventQueue;
-	ALLEGRO_CONFIG			*gameConfig;
 
+	GameConfig				*gameConfig;
 	GameDisplay				*gameDisplay;
 	GameInput				*gameInput;
 	GameMap					*gameMap;
@@ -34,11 +35,11 @@ public:
 	bool init();
 	void run();
 
-	game_state getState();
+	game_state getState() const;
 	void setState(game_state gameState);
 
-	ALLEGRO_BITMAP*	createBitmapFromLayers(ALLEGRO_BITMAP *texture[], int n);
-	int showMessage(const char *text, int flag, const char *button = nullptr);
+	ALLEGRO_BITMAP*	createBitmapFromLayers(ALLEGRO_BITMAP *texture[], int n) const;
+	int showMessage(const char *text, int flag, const char *button = nullptr) const;
 };
 
 #endif // PIJAM_GAME_H

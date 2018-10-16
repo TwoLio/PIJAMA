@@ -17,8 +17,8 @@ private:
 	ALLEGRO_MOUSE_STATE		mouseState;
 
 	bool					keys[ALLEGRO_KEY_MAX];
-	unsigned int			mouseNumButtons;
-	unsigned int			mouseNumAxis;
+	unsigned int			nMouseButtons;
+	unsigned int			nMouseAxis;
 
 public:
 	GameInput();
